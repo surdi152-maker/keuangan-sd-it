@@ -302,8 +302,8 @@
                 <input type="number" id="inNominal" class="w-full mt-1 border border-slate-300 rounded-xl p-2.5 text-sm" placeholder="0" required>
               </div>
               <div>
-                <label class="text-xs font-semibold text-slate-600">Keterangan</label>
-                <input type="text" id="inKet" class="w-full mt-1 border border-slate-300 rounded-xl p-2.5 text-sm" placeholder="Catatan..." required>
+                <label class="text-xs font-semibold text-slate-600">Keterangan / Pembayar</label>
+                <input type="text" id="inKet" class="w-full mt-1 border border-slate-300 rounded-xl p-2.5 text-sm" placeholder="Catatan atau Sumber Dana..." required>
               </div>
               <div class="flex items-end gap-2">
                 <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 rounded-xl transition">Simpan Transaksi</button>
@@ -353,8 +353,8 @@
                 <input type="number" id="outNominal" class="w-full mt-1 border border-slate-300 rounded-xl p-2.5 text-sm" placeholder="0" required>
               </div>
               <div>
-                <label class="text-xs font-semibold text-slate-600">Keterangan</label>
-                <input type="text" id="outKet" class="w-full mt-1 border border-slate-300 rounded-xl p-2.5 text-sm" placeholder="Catatan..." required>
+                <label class="text-xs font-semibold text-slate-600">Keterangan / Penerima</label>
+                <input type="text" id="outKet" class="w-full mt-1 border border-slate-300 rounded-xl p-2.5 text-sm" placeholder="Catatan atau Nama Penerima..." required>
               </div>
               <div class="flex items-end gap-2">
                 <button type="submit" class="w-full bg-rose-600 hover:bg-rose-500 text-white font-bold py-2.5 rounded-xl transition">Simpan Transaksi</button>
@@ -405,7 +405,6 @@
                 </div>
               </div>
 
-              <!-- Pilihan Bulan Pembayaran Menggunakan Checkbox Grid -->
               <div>
                 <label class="text-xs font-semibold text-slate-600 block mb-2">Pilih Bulan Yang Dibayar (Centang Checklist)</label>
                 <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-3 bg-slate-50 p-4 rounded-xl border border-slate-200">
@@ -1014,7 +1013,7 @@
       if (trx) printReceipt(trx);
     }
 
-    /* CETAK KUITANSI TANPA NPY BENDAHARA */
+    /* GENERALIZED PRINT ENGINE (SPP, PEMASUKAN & PENGELUARAN DENGAN FORMAT SERAGAM) */
     function printReceipt(trx) {
       const schoolName = state.school.name;
       const schoolAddr = state.school.address;
@@ -1023,14 +1022,28 @@
       const dateStr = "Bandar Lampung, " + new Date(trx.date).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' });
       const petugas = state.currentUser ? state.currentUser.user : "admin";
 
-      let penerimaText = "-";
-      let waliText = "(...........................)";
+      let receiptTitle = "KUITANSI PEMBAYARAN RESMI";
+      let receiptTitleArsip = "KUITANSI PEMBAYARAN RESMI (ARSIP BENDAHARA)";
+      let pihakSatuLabel = "Pembayar / Wali Murid";
+      let pihakSatuText = "(...........................)";
 
       if (trx.type === 'spp') {
-        penerimaText = `${trx.wali || 'Wali Murid'} (Wali dari ${trx.nama} - ${trx.kelas})`;
-        waliText = trx.wali || 'Wali Murid';
-      } else {
-        penerimaText = trx.ket || "Umum / Mitra Sekolah";
+        receiptTitle = "KUITANSI PEMBAYARAN RESMI (SPP)";
+        receiptTitleArsip = "KUITANSI PEMBAYARAN SPP (ARSIP BENDAHARA)";
+        pihakSatuText = trx.wali || 'Wali Murid';
+        penerimaDisplay = `${trx.wali || 'Wali Murid'} (Wali dari ${trx.nama} - ${trx.kelas})`;
+      } else if (trx.type === 'pemasukan') {
+        receiptTitle = "KUITANSI PEMASUKAN RESMI";
+        receiptTitleArsip = "KUITANSI PEMASUKAN RESMI (ARSIP BENDAHARA)";
+        pihakSatuLabel = "Penyetor / Pembayar";
+        pihakSatuText = trx.ket || "Umum / Mitra Sekolah";
+        penerimaDisplay = trx.ket || "Pihak Ketiga / Mitra";
+      } else if (trx.type === 'pengeluaran') {
+        receiptTitle = "KUITANSI PENGELUARAN RESMI";
+        receiptTitleArsip = "KUITANSI PENGELUARAN RESMI (ARSIP BENDAHARA)";
+        pihakSatuLabel = "Penerima Dana";
+        pihakSatuText = trx.ket || "Penerima / Vendor";
+        penerimaDisplay = trx.ket || "Penerima / Vendor";
       }
 
       const terbilangText = "# " + terbilang(trx.nominal) + " Rupiah #";
@@ -1042,7 +1055,7 @@
         <html lang="id">
         <head>
           <meta charset="UTF-8">
-          <title>Kuitansi Resmi Pembayaran</title>
+          <title>${receiptTitle}</title>
           <style>
             @page { size: A4 portrait; margin: 8mm; }
             body { font-family: 'Times New Roman', Times, serif; color: #0f172a; margin: 0; padding: 0; background: #fff; }
@@ -1087,7 +1100,7 @@
         </head>
         <body>
 
-          <!-- LEMBAR 1: UNTUK SISWA / WALI -->
+          <!-- LEMBAR 1: UNTUK PIHAK PEMBAYAR / PENERIMA DANA -->
           <div class="kuitansi-card">
             <div class="header-center">
               <img src="${logoUrl}" class="header-logo-img" alt="Logo">
@@ -1097,15 +1110,15 @@
             </div>
 
             <div class="title-bar">
-              <h2 class="receipt-heading">KUITANSI PEMBAYARAN RESMI</h2>
+              <h2 class="receipt-heading">${receiptTitle}</h2>
               <div class="receipt-no">Nomor Transaksi: <strong>${noTrx}</strong></div>
             </div>
 
             <table class="details-table">
               <tr>
-                <td style="width: 23%; font-weight: bold;">Telah Diterima Dari</td>
+                <td style="width: 23%; font-weight: bold;">Telah ${trx.type==='pengeluaran'?'Diserahkan Kepada':'Diterima Dari'}</td>
                 <td style="width: 2%; font-weight: bold;">:</td>
-                <td style="width: 75%;">${penerimaText}</td>
+                <td style="width: 75%;">${penerimaDisplay}</td>
               </tr>
               <tr>
                 <td style="font-weight: bold;">Uang Sejumlah</td>
@@ -1129,8 +1142,8 @@
             <table class="signature-table">
               <tr>
                 <td style="width: 50%;">
-                  <div style="margin-bottom: 45px;"><strong>Pembayar / Wali Murid</strong></div>
-                  <div style="font-weight: bold; text-decoration: underline;">${waliText}</div>
+                  <div style="margin-bottom: 45px;"><strong>${pihakSatuLabel}</strong></div>
+                  <div style="font-weight: bold; text-decoration: underline;">${pihakSatuText}</div>
                   <div style="font-size: 8pt; color: #64748b;">Tanda Tangan</div>
                 </td>
                 <td style="width: 50%; position: relative;">
@@ -1145,7 +1158,7 @@
             </table>
 
             <div class="receipt-footer">
-              <span>* Lembar 1: Untuk Siswa / Wali Murid</span>
+              <span>* Lembar 1: Untuk ${pihakSatuLabel}</span>
               <span>Dicetak secara resmi oleh Sistem Keuangan SD IT</span>
             </div>
           </div>
@@ -1164,15 +1177,15 @@
             </div>
 
             <div class="title-bar">
-              <h2 class="receipt-heading" style="color: #334155;">KUITANSI PEMBAYARAN RESMI (ARSIP BENDAHARA)</h2>
+              <h2 class="receipt-heading" style="color: #334155;">${receiptTitleArsip}</h2>
               <div class="receipt-no">Nomor Transaksi: <strong>${noTrx}</strong></div>
             </div>
 
             <table class="details-table">
               <tr>
-                <td style="width: 23%; font-weight: bold;">Telah Diterima Dari</td>
+                <td style="width: 23%; font-weight: bold;">Telah ${trx.type==='pengeluaran'?'Diserahkan Kepada':'Diterima Dari'}</td>
                 <td style="width: 2%; font-weight: bold;">:</td>
-                <td style="width: 75%;">${penerimaText}</td>
+                <td style="width: 75%;">${penerimaDisplay}</td>
               </tr>
               <tr>
                 <td style="font-weight: bold;">Uang Sejumlah</td>
@@ -1191,8 +1204,8 @@
             <table class="signature-table">
               <tr>
                 <td style="width: 50%;">
-                  <div style="margin-bottom: 45px;"><strong>Pembayar / Wali Murid</strong></div>
-                  <div style="font-weight: bold; text-decoration: underline;">${waliText}</div>
+                  <div style="margin-bottom: 45px;"><strong>${pihakSatuLabel}</strong></div>
+                  <div style="font-weight: bold; text-decoration: underline;">${pihakSatuText}</div>
                 </td>
                 <td style="width: 50%; position: relative;">
                   <div style="margin-bottom: 45px;">
