@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sistem Keuangan SD IT - Pro Version</title>
+  <title>Sistem Keuangan SD IT</title>
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Chart.js -->
@@ -24,16 +24,24 @@
       100% { opacity: 1; transform: scale(1) translateY(0); }
     }
 
-    .menu-item {
-      transition: all 0.25s ease;
-    }
+    .menu-item { transition: all 0.25s ease; }
     .menu-item:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 16px -4px rgba(16, 185, 129, 0.25);
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px -5px rgba(16, 185, 129, 0.3);
     }
-    .glass-card {
-      background: rgba(255, 255, 255, 0.85);
-      backdrop-filter: blur(12px);
+
+    /* Style Khusus Media Cetak Kuitansi */
+    @media print {
+      body * { visibility: hidden !important; }
+      #printArea, #printArea * { visibility: visible !important; }
+      #printArea {
+        position: absolute !important;
+        left: 0 !important;
+        top: 0 !important;
+        width: 100% !important;
+        background: #fff !important;
+      }
+      @page { size: A4 portrait; margin: 8mm; }
     }
   </style>
 </head>
@@ -47,12 +55,11 @@
           <i class="fa-solid fa-key text-4xl"></i>
         </div>
         <h1 class="text-3xl font-bold bg-gradient-to-r from-emerald-400 to-teal-200 bg-clip-text text-transparent">Aktivasi Lisensi Aplikasi Keuangan SD IT</h1>
-        <p class="text-slate-400 mt-2">Masa aktif lisensi Anda telah habis atau belum terdaftar. Pilih paket lisensi berikut:</p>
+        <p class="text-slate-400 mt-2">Masa aktif lisensi Anda telah habis atau belum terdaftar. Silakan pilih paket lisensi berikut:</p>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <!-- Bulanan -->
-        <div class="bg-slate-700/50 border border-slate-600 rounded-2xl p-6 flex flex-col justify-between hover:border-emerald-500 transition shadow-lg hover:shadow-emerald-500/10">
+        <div class="bg-slate-700/50 border border-slate-600 rounded-2xl p-6 flex flex-col justify-between hover:border-emerald-500 transition shadow-lg">
           <div>
             <span class="text-xs font-semibold px-3 py-1 bg-slate-600 text-slate-300 rounded-full">Paket Bulanan</span>
             <h3 class="text-2xl font-bold mt-4 text-white">Rp 500.000</h3>
@@ -65,9 +72,8 @@
           <button onclick="buyLicense('Paket Bulanan - Rp 500.000/Bulan')" class="w-full py-3 rounded-xl bg-slate-600 hover:bg-emerald-600 font-semibold text-white transition">Beli via WA</button>
         </div>
 
-        <!-- Tahunan -->
-        <div class="bg-gradient-to-b from-emerald-900/40 to-slate-800 border-2 border-emerald-500 rounded-2xl p-6 flex flex-col justify-between relative shadow-xl shadow-emerald-950/50">
-          <span class="absolute -top-3 left-1/2 -translate-x-1/2 text-xs font-bold px-3 py-1 bg-emerald-500 text-slate-950 rounded-full uppercase tracking-wider">Paling Laris</span>
+        <div class="bg-gradient-to-b from-emerald-900/40 to-slate-800 border-2 border-emerald-500 rounded-2xl p-6 flex flex-col justify-between relative shadow-xl">
+          <span class="absolute -top-3 left-1/2 -translate-x-1/2 text-xs font-bold px-3 py-1 bg-emerald-500 text-slate-950 rounded-full uppercase">Hemat</span>
           <div>
             <span class="text-xs font-semibold px-3 py-1 bg-emerald-500/20 text-emerald-300 rounded-full">Paket Tahunan</span>
             <h3 class="text-2xl font-bold mt-4 text-white">Rp 3.500.000</h3>
@@ -75,14 +81,12 @@
             <ul class="text-sm text-slate-300 space-y-2 mb-6">
               <li><i class="fa-solid fa-check text-emerald-400 mr-2"></i>Akses Penuh Fitur</li>
               <li><i class="fa-solid fa-check text-emerald-400 mr-2"></i>Prioritas Support</li>
-              <li><i class="fa-solid fa-check text-emerald-400 mr-2"></i>Gratis Update</li>
             </ul>
           </div>
           <button onclick="buyLicense('Paket Tahunan - Rp 3.500.000/Tahun')" class="w-full py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 font-bold text-slate-950 transition">Beli via WA</button>
         </div>
 
-        <!-- Selamanya -->
-        <div class="bg-slate-700/50 border border-slate-600 rounded-2xl p-6 flex flex-col justify-between hover:border-emerald-500 transition shadow-lg hover:shadow-emerald-500/10">
+        <div class="bg-slate-700/50 border border-slate-600 rounded-2xl p-6 flex flex-col justify-between hover:border-emerald-500 transition shadow-lg">
           <div>
             <span class="text-xs font-semibold px-3 py-1 bg-amber-500/20 text-amber-300 rounded-full">Lifetime</span>
             <h3 class="text-2xl font-bold mt-4 text-white">Rp 5.500.000</h3>
@@ -100,7 +104,7 @@
         <input type="text" id="inputLicenseKey" placeholder="Masukkan Kode Lisensi..." class="flex-1 bg-slate-800 border border-slate-600 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-emerald-500">
         <button onclick="activateLicense()" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-6 py-3 rounded-xl transition">Aktivasi Aplikasi</button>
       </div>
-      <p class="text-xs text-slate-500 mt-2 text-center">Gunakan kode lisensi demo: <code class="text-emerald-400 font-mono">SDIT-PRO-2026</code></p>
+      <p class="text-xs text-slate-500 mt-2 text-center">Gunakan kode lisensi <code class="text-emerald-400">SDIT-PRO-2026</code> untuk uji coba demo.</p>
     </div>
   </div>
 
@@ -112,7 +116,7 @@
           <i class="fa-solid fa-school text-3xl text-emerald-400"></i>
         </div>
         <h2 class="text-2xl font-bold text-white school-name-display">SD IT AL-FATH</h2>
-        <p class="text-slate-400 text-sm">Sistem Informasi Keuangan & Management</p>
+        <p class="text-slate-400 text-sm">Sistem Informasi Keuangan Sekolah</p>
       </div>
 
       <form onsubmit="handleLogin(event)" class="space-y-4">
@@ -126,18 +130,6 @@
         </div>
         <button type="submit" class="w-full py-3 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-bold rounded-xl shadow-lg transition">Masuk ke Sistem</button>
       </form>
-
-      <!-- Demo Accounts Hint -->
-      <div class="mt-6 p-4 rounded-xl bg-slate-900/80 border border-slate-700 text-xs text-slate-400">
-        <p class="font-bold text-emerald-400 mb-1"><i class="fa-solid fa-info-circle mr-1"></i> Akun Demo Akses Role:</p>
-        <ul class="space-y-1">
-          <li>• <strong class="text-slate-300">Admin:</strong> admin / admin123</li>
-          <li>• <strong class="text-slate-300">Bendahara:</strong> bendahara / ben123</li>
-          <li>• <strong class="text-slate-300">Kepala Sekolah:</strong> kepsek / kepsek123</li>
-          <li>• <strong class="text-slate-300">Yayasan:</strong> yayasan / yayasan123</li>
-          <li>• <strong class="text-slate-300">Tata Usaha:</strong> tu / tu123</li>
-        </ul>
-      </div>
     </div>
   </div>
 
@@ -145,143 +137,155 @@
   <div id="mainApp" class="hidden min-h-screen flex flex-col md:flex-row bg-slate-100">
     
     <!-- Sidebar Navigasi -->
-    <aside class="w-full md:w-64 bg-slate-900 text-white flex-shrink-0 border-r border-slate-800 flex flex-col justify-between">
-      <div>
-        <div class="p-5 flex items-center space-x-3 border-b border-slate-800">
-          <img id="appLogo" src="https://cdn-icons-png.flaticon.com/512/2997/2997295.png" class="w-10 h-10 rounded-lg object-cover bg-emerald-500/20 border border-emerald-500/40">
-          <div>
-            <h1 class="font-bold text-sm leading-tight text-emerald-400 school-name-display">SD IT AL-FATH</h1>
-            <p class="text-[10px] text-slate-400">Sistem Keuangan v2.0</p>
-          </div>
-        </div>
-
-        <nav class="p-4 space-y-1.5" id="sidebarMenu">
-          <!-- Dynamically Rendered by Permissions -->
-        </nav>
-      </div>
-
-      <!-- Current User Info Sidebar Footer -->
-      <div class="p-4 border-t border-slate-800 bg-slate-950/50">
-        <div class="flex items-center space-x-3">
-          <div class="w-9 h-9 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-sm border border-emerald-500/40" id="userAvatar">
-            A
-          </div>
-          <div class="overflow-hidden flex-1">
-            <h4 class="text-xs font-bold text-slate-200 truncate" id="currentUserName">Admin Utama</h4>
-            <span class="inline-block text-[10px] font-semibold uppercase px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30" id="currentUserRole">ADMIN</span>
-          </div>
-          <button onclick="logout()" title="Logout" class="text-rose-400 hover:text-rose-300 p-1.5 rounded-lg hover:bg-rose-500/10 transition">
-            <i class="fa-solid fa-power-off text-sm"></i>
-          </button>
+    <aside class="w-full md:w-64 bg-slate-900 text-white flex-shrink-0 border-r border-slate-800">
+      <div class="p-5 flex items-center space-x-3 border-b border-slate-800">
+        <img id="appLogo" src="https://via.placeholder.com/40" class="w-10 h-10 rounded-lg object-cover bg-emerald-500/20 border border-emerald-500/40">
+        <div>
+          <h1 class="font-bold text-sm leading-tight text-emerald-400 school-name-display">SD IT AL-FATH</h1>
+          <p id="userRoleBadge" class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Bendahara</p>
         </div>
       </div>
+
+      <nav class="p-4 space-y-2">
+        <button onclick="switchTab('dashboard')" class="menu-item w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-slate-300 hover:bg-emerald-600 hover:text-white transition font-medium text-sm">
+          <i class="fa-solid fa-chart-pie w-5"></i><span>Dashboard</span>
+        </button>
+        <button onclick="switchTab('siswa')" class="menu-item w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-slate-300 hover:bg-emerald-600 hover:text-white transition font-medium text-sm">
+          <i class="fa-solid fa-users w-5"></i><span>Data Siswa</span>
+        </button>
+        <button onclick="switchTab('pemasukan')" class="role-restricted menu-item w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-slate-300 hover:bg-emerald-600 hover:text-white transition font-medium text-sm">
+          <i class="fa-solid fa-wallet w-5"></i><span>Pemasukan</span>
+        </button>
+        <button onclick="switchTab('pengeluaran')" class="role-restricted menu-item w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-slate-300 hover:bg-emerald-600 hover:text-white transition font-medium text-sm">
+          <i class="fa-solid fa-arrow-right-from-bracket w-5"></i><span>Pengeluaran</span>
+        </button>
+        <button onclick="switchTab('spp')" class="role-restricted menu-item w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-slate-300 hover:bg-emerald-600 hover:text-white transition font-medium text-sm">
+          <i class="fa-solid fa-graduation-cap w-5"></i><span>Pembayaran SPP</span>
+        </button>
+        <button onclick="switchTab('laporan')" class="menu-item w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-slate-300 hover:bg-emerald-600 hover:text-white transition font-medium text-sm">
+          <i class="fa-solid fa-file-invoice-dollar w-5"></i><span>Laporan Rekap</span>
+        </button>
+        <button onclick="switchTab('pengaturan')" class="role-admin-only menu-item w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-slate-300 hover:bg-emerald-600 hover:text-white transition font-medium text-sm">
+          <i class="fa-solid fa-gear w-5"></i><span>Pengaturan</span>
+        </button>
+        <button onclick="logout()" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-rose-400 hover:bg-rose-500/20 transition font-medium text-sm mt-8">
+          <i class="fa-solid fa-power-off w-5"></i><span>Keluar</span>
+        </button>
+      </nav>
     </aside>
 
     <!-- Main Content Area -->
     <main class="flex-1 flex flex-col min-w-0 h-screen overflow-y-auto">
-      
-      <!-- Top Header -->
-      <header class="bg-white border-b border-slate-200 px-6 py-4 flex flex-col sm:flex-row justify-between items-center gap-4 sticky top-0 z-10 shadow-sm">
+      <header class="bg-white border-b border-slate-200 px-6 py-4 flex flex-col sm:flex-row justify-between items-center gap-4 sticky top-0 z-10">
         <div>
           <h2 id="pageTitle" class="text-xl font-bold text-slate-800">Dashboard Utama</h2>
-          <p class="text-xs text-slate-500 school-address-display">Jl. Pendidikan No. 12, SD IT Smart</p>
+          <p class="text-xs text-slate-500 school-address-display">Jl. Pendidikan No. 12, Kota Bandar Lampung</p>
         </div>
-        <!-- Realtime Clock -->
-        <div class="bg-emerald-50 text-emerald-800 border border-emerald-200 px-4 py-2 rounded-2xl text-right flex items-center gap-3">
-          <i class="fa-regular fa-clock text-emerald-600 text-xl"></i>
+        <div class="bg-emerald-50 text-emerald-800 border border-emerald-200 px-4 py-2 rounded-xl text-right flex items-center gap-3">
+          <i class="fa-regular fa-clock text-emerald-600 text-lg"></i>
           <div>
             <div id="realtimeClock" class="font-bold text-sm tracking-wide">00:00:00 WIB</div>
-            <div id="realtimeDate" class="text-[10px] text-emerald-600 font-medium">Senin, 1 Jan 2026</div>
+            <div id="realtimeDate" class="text-[10px] text-emerald-600">Senin, 1 Jan 2026</div>
           </div>
         </div>
       </header>
 
-      <!-- Dynamic Views Container -->
-      <div class="p-6 space-y-6">
-        
-        <!-- === VIEW: DASHBOARD === -->
+      <div class="p-6">
+        <!-- VIEW: DASHBOARD -->
         <section id="viewDashboard" class="animate-popup space-y-6">
-          <div class="grid grid-cols-1 md:grid-cols-4 gap-5">
-            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
-              <div>
-                <p class="text-xs text-slate-500 font-semibold uppercase">Total Siswa Aktif</p>
-                <h3 id="dashTotalSiswa" class="text-2xl font-bold text-slate-800 mt-1">0 Siswa</h3>
-              </div>
-              <div class="p-3 bg-indigo-100 rounded-xl text-indigo-600"><i class="fa-solid fa-users text-xl"></i></div>
-            </div>
-            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
               <div>
                 <p class="text-xs text-slate-500 font-semibold uppercase">Total Pemasukan</p>
                 <h3 id="dashPemasukan" class="text-2xl font-bold text-emerald-600 mt-1">Rp 0</h3>
               </div>
               <div class="p-3 bg-emerald-100 rounded-xl text-emerald-600"><i class="fa-solid fa-arrow-down text-xl"></i></div>
             </div>
-            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
               <div>
                 <p class="text-xs text-slate-500 font-semibold uppercase">Total Pengeluaran</p>
                 <h3 id="dashPengeluaran" class="text-2xl font-bold text-rose-600 mt-1">Rp 0</h3>
               </div>
               <div class="p-3 bg-rose-100 rounded-xl text-rose-600"><i class="fa-solid fa-arrow-up text-xl"></i></div>
             </div>
-            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
               <div>
-                <p class="text-xs text-slate-500 font-semibold uppercase">Saldo Kas Utama</p>
+                <p class="text-xs text-slate-500 font-semibold uppercase">Saldo Kas Sekolah</p>
                 <h3 id="dashSaldo" class="text-2xl font-bold text-blue-600 mt-1">Rp 0</h3>
               </div>
               <div class="p-3 bg-blue-100 rounded-xl text-blue-600"><i class="fa-solid fa-scale-balanced text-xl"></i></div>
             </div>
           </div>
 
-          <!-- Charts -->
           <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-              <h4 class="font-bold text-slate-800 mb-4 flex items-center gap-2">
-                <i class="fa-solid fa-chart-column text-emerald-600"></i> Arus Kas Keuangan
-              </h4>
+              <h4 class="font-bold text-slate-800 mb-4">Grafik Keuangan Bulanan</h4>
               <canvas id="chartKeuangan" class="max-h-64"></canvas>
             </div>
             <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-              <h4 class="font-bold text-slate-800 mb-4 flex items-center gap-2">
-                <i class="fa-solid fa-chart-pie text-emerald-600"></i> Proporsi Kategori Pemasukan
-              </h4>
+              <h4 class="font-bold text-slate-800 mb-4">Proporsi Sumber Pemasukan</h4>
               <canvas id="chartPie" class="max-h-64"></canvas>
             </div>
           </div>
         </section>
 
-        <!-- === VIEW: DATA SISWA === -->
+        <!-- VIEW: DATA SISWA -->
         <section id="viewSiswa" class="hidden animate-popup space-y-6">
-          <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col md:flex-row justify-between items-center gap-4">
-            <div class="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
-              <input type="text" id="searchSiswa" onkeyup="renderSiswaTable()" placeholder="Cari Siswa / NIS / NISN..." class="border border-slate-300 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-emerald-500 w-full sm:w-64">
-              <select id="filterKelasSiswa" onchange="renderSiswaTable()" class="border border-slate-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-emerald-500">
-                <option value="">Semua Kelas</option>
-                <option value="1 SD IT">Kelas 1</option>
-                <option value="2 SD IT">Kelas 2</option>
-                <option value="3 SD IT">Kelas 3</option>
-                <option value="4 SD IT">Kelas 4</option>
-                <option value="5 SD IT">Kelas 5</option>
-                <option value="6 SD IT">Kelas 6</option>
-              </select>
-            </div>
-            <button id="btnAddSiswa" onclick="openSiswaModal()" class="w-full md:w-auto bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-5 py-2.5 rounded-xl shadow transition flex items-center justify-center gap-2">
-              <i class="fa-solid fa-user-plus"></i> Tambah Siswa Baru
-            </button>
+          <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+            <h3 class="font-bold text-slate-800 mb-4" id="siswaFormTitle">Tambah Data Siswa Baru</h3>
+            <form onsubmit="saveSiswa(event)" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+              <input type="hidden" id="siswaId">
+              <div>
+                <label class="text-xs font-semibold text-slate-600">NISN / NIS</label>
+                <input type="text" id="siswaNis" class="w-full mt-1 border border-slate-300 rounded-xl p-2.5 text-sm" required placeholder="12345678">
+              </div>
+              <div>
+                <label class="text-xs font-semibold text-slate-600">Nama Lengkap Siswa</label>
+                <input type="text" id="siswaNama" class="w-full mt-1 border border-slate-300 rounded-xl p-2.5 text-sm" required placeholder="Ahmad...">
+              </div>
+              <div>
+                <label class="text-xs font-semibold text-slate-600">Kelas</label>
+                <select id="siswaKelas" class="w-full mt-1 border border-slate-300 rounded-xl p-2.5 text-sm" required>
+                  <option value="1 SD IT">1 SD IT</option>
+                  <option value="2 SD IT">2 SD IT</option>
+                  <option value="3 SD IT">3 SD IT</option>
+                  <option value="4 SD IT">4 SD IT</option>
+                  <option value="5 SD IT">5 SD IT</option>
+                  <option value="6 SD IT">6 SD IT</option>
+                </select>
+              </div>
+              <div>
+                <label class="text-xs font-semibold text-slate-600">Nama Orang Tua / Wali</label>
+                <input type="text" id="siswaWali" class="w-full mt-1 border border-slate-300 rounded-xl p-2.5 text-sm" required placeholder="Bpk/Ibu...">
+              </div>
+              <div>
+                <label class="text-xs font-semibold text-slate-600">No. HP / WA Wali</label>
+                <input type="text" id="siswaHp" class="w-full mt-1 border border-slate-300 rounded-xl p-2.5 text-sm" placeholder="0821...">
+              </div>
+              <div>
+                <label class="text-xs font-semibold text-slate-600">Tarif SPP Bulanan (Rp)</label>
+                <input type="number" id="siswaTarif" value="350000" class="w-full mt-1 border border-slate-300 rounded-xl p-2.5 text-sm" required>
+              </div>
+              <div class="md:col-span-2 flex items-end gap-2">
+                <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 rounded-xl transition">Simpan Data Siswa</button>
+                <button type="button" onclick="resetSiswaForm()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold px-4 py-2.5 rounded-xl transition">Batal</button>
+              </div>
+            </form>
           </div>
 
           <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+            <div class="p-4 bg-slate-50 border-b border-slate-200 font-bold text-slate-700">Daftar Data Siswa SD IT</div>
             <div class="overflow-x-auto">
               <table class="w-full text-left border-collapse text-sm">
                 <thead>
-                  <tr class="bg-slate-100 border-b border-slate-200 text-slate-600 font-semibold">
-                    <th class="p-3">NIS/NISN</th>
+                  <tr class="bg-slate-100 border-b border-slate-200 text-slate-600">
+                    <th class="p-3">NISN</th>
                     <th class="p-3">Nama Siswa</th>
                     <th class="p-3">Kelas</th>
-                    <th class="p-3">L/P</th>
-                    <th class="p-3">Orang Tua / Wali</th>
+                    <th class="p-3">Wali Murid</th>
                     <th class="p-3">No. HP</th>
-                    <th class="p-3">Status</th>
-                    <th class="p-3 text-center">Aksi</th>
+                    <th class="p-3">Tarif SPP</th>
+                    <th class="p-3">Aksi</th>
                   </tr>
                 </thead>
                 <tbody id="tableSiswa"></tbody>
@@ -290,14 +294,14 @@
           </div>
         </section>
 
-        <!-- === VIEW: PEMASUKAN === -->
+        <!-- VIEW: PEMASUKAN -->
         <section id="viewPemasukan" class="hidden animate-popup space-y-6">
-          <div id="formPemasukanContainer" class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-            <h3 class="font-bold text-slate-800 mb-4">Input Pemasukan Non-SPP</h3>
+          <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+            <h3 class="font-bold text-slate-800 mb-4">Tambah Transaksi Pemasukan</h3>
             <form onsubmit="addTransaction(event, 'pemasukan')" class="grid grid-cols-1 md:grid-cols-4 gap-4">
               <div>
                 <label class="text-xs font-semibold text-slate-600">Kategori</label>
-                <select id="inKategori" class="w-full mt-1 border border-slate-300 rounded-xl p-2.5 text-sm focus:outline-none focus:border-emerald-500" required>
+                <select id="inKategori" class="w-full mt-1 border border-slate-300 rounded-xl p-2.5 text-sm" required>
                   <option value="Dana BOS">Dana BOS</option>
                   <option value="Infaq / Sedekah">Infaq / Sedekah</option>
                   <option value="Uang Gedung / Pendaftaran">Uang Gedung / Pendaftaran</option>
@@ -308,14 +312,14 @@
               </div>
               <div>
                 <label class="text-xs font-semibold text-slate-600">Jumlah (Rp)</label>
-                <input type="number" id="inNominal" class="w-full mt-1 border border-slate-300 rounded-xl p-2.5 text-sm focus:outline-none focus:border-emerald-500" placeholder="0" required>
+                <input type="number" id="inNominal" class="w-full mt-1 border border-slate-300 rounded-xl p-2.5 text-sm" placeholder="0" required>
               </div>
               <div>
-                <label class="text-xs font-semibold text-slate-600">Keterangan / Sumber</label>
-                <input type="text" id="inKet" class="w-full mt-1 border border-slate-300 rounded-xl p-2.5 text-sm focus:outline-none focus:border-emerald-500" placeholder="Catatan..." required>
+                <label class="text-xs font-semibold text-slate-600">Keterangan</label>
+                <input type="text" id="inKet" class="w-full mt-1 border border-slate-300 rounded-xl p-2.5 text-sm" placeholder="Catatan..." required>
               </div>
               <div class="flex items-end">
-                <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 rounded-xl transition">Simpan & Cetak Kuitansi</button>
+                <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 rounded-xl transition">Simpan & Cetak</button>
               </div>
             </form>
           </div>
@@ -330,7 +334,7 @@
                     <th class="p-3">Kategori</th>
                     <th class="p-3">Keterangan</th>
                     <th class="p-3">Nominal</th>
-                    <th class="p-3 text-center">Aksi</th>
+                    <th class="p-3">Aksi</th>
                   </tr>
                 </thead>
                 <tbody id="tablePemasukan"></tbody>
@@ -339,17 +343,17 @@
           </div>
         </section>
 
-        <!-- === VIEW: PENGELUARAN === -->
+        <!-- VIEW: PENGELUARAN -->
         <section id="viewPengeluaran" class="hidden animate-popup space-y-6">
-          <div id="formPengeluaranContainer" class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-            <h3 class="font-bold text-slate-800 mb-4">Input Pengeluaran / Anggaran</h3>
+          <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+            <h3 class="font-bold text-slate-800 mb-4">Tambah Transaksi Pengeluaran</h3>
             <form onsubmit="addTransaction(event, 'pengeluaran')" class="grid grid-cols-1 md:grid-cols-4 gap-4">
               <div>
-                <label class="text-xs font-semibold text-slate-600">Kategori Pengeluaran</label>
-                <select id="outKategori" class="w-full mt-1 border border-slate-300 rounded-xl p-2.5 text-sm focus:outline-none focus:border-emerald-500" required>
+                <label class="text-xs font-semibold text-slate-600">Kategori</label>
+                <select id="outKategori" class="w-full mt-1 border border-slate-300 rounded-xl p-2.5 text-sm" required>
                   <option value="Gaji Guru & Staf">Gaji Guru & Staf</option>
-                  <option value="Operasional & Listrik/Air">Operasional & Listrik/Air</option>
-                  <option value="Pembelian ATK & Peralatan">Pembelian ATK & Peralatan</option>
+                  <option value="Operational & Listrik/Air">Operational & Listrik/Air</option>
+                  <option value="Pembelian ATK & Alat">Pembelian ATK & Alat</option>
                   <option value="Perbaikan & Pemeliharaan">Perbaikan & Pemeliharaan</option>
                   <option value="Kegiatan & Acara Siswa">Kegiatan & Acara Siswa</option>
                   <option value="Lain-lain">Lain-lain</option>
@@ -357,14 +361,14 @@
               </div>
               <div>
                 <label class="text-xs font-semibold text-slate-600">Jumlah (Rp)</label>
-                <input type="number" id="outNominal" class="w-full mt-1 border border-slate-300 rounded-xl p-2.5 text-sm focus:outline-none focus:border-emerald-500" placeholder="0" required>
+                <input type="number" id="outNominal" class="w-full mt-1 border border-slate-300 rounded-xl p-2.5 text-sm" placeholder="0" required>
               </div>
               <div>
-                <label class="text-xs font-semibold text-slate-600">Keterangan Pengeluaran</label>
-                <input type="text" id="outKet" class="w-full mt-1 border border-slate-300 rounded-xl p-2.5 text-sm focus:outline-none focus:border-emerald-500" placeholder="Rincian..." required>
+                <label class="text-xs font-semibold text-slate-600">Keterangan</label>
+                <input type="text" id="outKet" class="w-full mt-1 border border-slate-300 rounded-xl p-2.5 text-sm" placeholder="Catatan..." required>
               </div>
               <div class="flex items-end">
-                <button type="submit" class="w-full bg-rose-600 hover:bg-rose-500 text-white font-bold py-2.5 rounded-xl transition">Simpan & Cetak Kuitansi</button>
+                <button type="submit" class="w-full bg-rose-600 hover:bg-rose-500 text-white font-bold py-2.5 rounded-xl transition">Simpan & Cetak</button>
               </div>
             </form>
           </div>
@@ -379,7 +383,7 @@
                     <th class="p-3">Kategori</th>
                     <th class="p-3">Keterangan</th>
                     <th class="p-3">Nominal</th>
-                    <th class="p-3 text-center">Aksi</th>
+                    <th class="p-3">Aksi</th>
                   </tr>
                 </thead>
                 <tbody id="tablePengeluaran"></tbody>
@@ -388,104 +392,88 @@
           </div>
         </section>
 
-        <!-- === VIEW: SPP & TAGIHAN === -->
+        <!-- VIEW: PEMBAYARAN & TAGIHAN SPP -->
         <section id="viewSpp" class="hidden animate-popup space-y-6">
-          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            
-            <!-- Form Pembayaran SPP -->
-            <div class="lg:col-span-1 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
-              <h3 class="font-bold text-slate-800 border-b border-slate-100 pb-3">Form Bayar SPP Siswa</h3>
-              
-              <div>
+          <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+            <h3 class="font-bold text-slate-800 mb-4">Kalkulasi Tagihan & Pembayaran SPP</h3>
+            <form onsubmit="paySPP(event)" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+              <div class="md:col-span-2">
                 <label class="text-xs font-semibold text-slate-600">Pilih Siswa</label>
-                <select id="sppSiswaSelect" onchange="onSppSiswaSelected()" class="w-full mt-1 border border-slate-300 rounded-xl p-2.5 text-sm focus:outline-none focus:border-emerald-500" required>
+                <select id="sppSelectSiswa" onchange="loadSppSiswaInfo()" class="w-full mt-1 border border-slate-300 rounded-xl p-2.5 text-sm" required>
                   <option value="">-- Pilih Siswa --</option>
                 </select>
               </div>
-
-              <!-- Student Summary Card -->
-              <div id="sppStudentCard" class="hidden bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-2 text-xs">
-                <div class="flex justify-between"><span class="text-slate-500">Kelas:</span><strong id="cardKelas" class="text-slate-800">-</strong></div>
-                <div class="flex justify-between"><span class="text-slate-500">NISN:</span><strong id="cardNisn" class="text-slate-800">-</strong></div>
-                <div class="flex justify-between"><span class="text-slate-500">Tarif / Bulan:</span><strong id="cardTarif" class="text-emerald-600 font-bold">Rp 350.000</strong></div>
-                <div class="flex justify-between border-t border-slate-200 pt-2"><span class="text-slate-500 font-semibold">Tunggakan Tagihan:</span><strong id="cardTagihan" class="text-rose-600 font-bold">0 Bulan</strong></div>
-              </div>
-
               <div>
-                <label class="text-xs font-semibold text-slate-600 mb-2 block">Pilih Bulan Yang Dibayar:</label>
-                <div id="sppMonthsList" class="grid grid-cols-2 gap-2 max-h-48 overflow-y-auto p-2 bg-slate-50 border border-slate-200 rounded-xl">
-                  <span class="text-xs text-slate-400 col-span-2 text-center py-4">Pilih siswa terlebih dahulu</span>
-                </div>
+                <label class="text-xs font-semibold text-slate-600">Sisa Tagihan Sebelumnya</label>
+                <input type="text" id="sppTagihanDisplay" value="Rp 0" class="w-full mt-1 border border-slate-300 rounded-xl p-2.5 text-sm bg-rose-50 text-rose-700 font-bold" readonly>
               </div>
-
-              <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-4 text-center">
-                <span class="text-xs text-emerald-700 font-semibold uppercase">Total Pembayaran</span>
-                <h2 id="sppTotalCalculated" class="text-2xl font-bold text-emerald-700 mt-1">Rp 0</h2>
+              <div>
+                <label class="text-xs font-semibold text-slate-600">Tarif / Bulan</label>
+                <input type="text" id="sppTarifDisplay" value="Rp 0" class="w-full mt-1 border border-slate-300 rounded-xl p-2.5 text-sm bg-slate-100" readonly>
               </div>
+              <div>
+                <label class="text-xs font-semibold text-slate-600">Bayar Berapa Bulan?</label>
+                <input type="number" id="sppBulanCount" min="1" max="12" value="1" onchange="calcSPP()" onkeyup="calcSPP()" class="w-full mt-1 border border-slate-300 rounded-xl p-2.5 text-sm" required>
+              </div>
+              <div>
+                <label class="text-xs font-semibold text-slate-600">Total Nominal Pembayaran</label>
+                <input type="text" id="sppTotalDisplay" value="Rp 0" class="w-full mt-1 border border-slate-300 rounded-xl p-2.5 text-sm bg-emerald-50 font-bold text-emerald-600" readonly>
+              </div>
+              <div class="md:col-span-2 flex items-end">
+                <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 rounded-xl transition">Bayar & Cetak Kuitansi Resmi</button>
+              </div>
+            </form>
+          </div>
 
-              <button id="btnBayarSPP" onclick="processSppPayment()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl transition shadow">
-                Bayar & Cetak Kuitansi
-              </button>
+          <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+            <div class="p-4 bg-slate-50 border-b border-slate-200 font-bold text-slate-700">Riwayat Pembayaran SPP Siswa</div>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left border-collapse text-sm">
+                <thead>
+                  <tr class="bg-slate-100 border-b border-slate-200 text-slate-600">
+                    <th class="p-3">Tanggal</th>
+                    <th class="p-3">Nama Siswa</th>
+                    <th class="p-3">Kelas</th>
+                    <th class="p-3">Jumlah Bulan</th>
+                    <th class="p-3">Total Bayar</th>
+                    <th class="p-3">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody id="tableSpp"></tbody>
+              </table>
             </div>
-
-            <!-- Tab / Daftar Tagihan & Status SPP -->
-            <div class="lg:col-span-2 bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden flex flex-col">
-              <div class="p-4 bg-slate-50 border-b border-slate-200 flex flex-col sm:flex-row justify-between items-center gap-3">
-                <h4 class="font-bold text-slate-800">Status Tagihan & Riwayat SPP</h4>
-                <div class="flex gap-2 w-full sm:w-auto">
-                  <input type="text" id="searchSppTrx" onkeyup="renderSppHistoryTable()" placeholder="Cari Riwayat Siswa..." class="border border-slate-300 rounded-xl px-3 py-1.5 text-xs focus:outline-none focus:border-emerald-500">
-                </div>
-              </div>
-
-              <div class="overflow-x-auto flex-1">
-                <table class="w-full text-left border-collapse text-sm">
-                  <thead>
-                    <tr class="bg-slate-100 border-b border-slate-200 text-slate-600">
-                      <th class="p-3">Tanggal</th>
-                      <th class="p-3">Siswa</th>
-                      <th class="p-3">Kelas</th>
-                      <th class="p-3">Bulan Dibayar</th>
-                      <th class="p-3">Total Nominal</th>
-                      <th class="p-3 text-center">Aksi</th>
-                    </tr>
-                  </thead>
-                  <tbody id="tableSppHistory"></tbody>
-                </table>
-              </div>
-            </div>
-
           </div>
         </section>
 
-        <!-- === VIEW: LAPORAN REKAP === -->
+        <!-- VIEW: LAPORAN -->
         <section id="viewLaporan" class="hidden animate-popup space-y-6">
           <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
             <div>
-              <h3 class="font-bold text-slate-800">Laporan Keuangan Lengkap</h3>
-              <p class="text-xs text-slate-500">Ringkasan pemasukan, pengeluaran, SPP, harian, bulanan, dan tahunan.</p>
+              <h3 class="font-bold text-slate-800">Rekap Laporan Keuangan</h3>
+              <p class="text-xs text-slate-500">Unduh data laporan lengkap dalam format Excel</p>
             </div>
             <button onclick="exportToExcel()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-5 py-2.5 rounded-xl shadow transition flex items-center gap-2">
               <i class="fa-solid fa-file-excel"></i> Ekspor Laporan Excel
             </button>
           </div>
 
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-              <span class="text-xs text-slate-400 font-bold uppercase">Rekap Total Harian</span>
-              <h4 id="reportHari" class="text-xl font-bold text-slate-800 mt-1">Rp 0</h4>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="bg-white p-5 rounded-2xl border border-slate-200">
+              <span class="text-xs text-slate-400 font-bold uppercase">Rekap Harian</span>
+              <h4 id="reportHari" class="text-xl font-bold text-slate-800 mt-2">Rp 0</h4>
             </div>
-            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-              <span class="text-xs text-slate-400 font-bold uppercase">Rekap Total Bulanan</span>
-              <h4 id="reportBulan" class="text-xl font-bold text-slate-800 mt-1">Rp 0</h4>
+            <div class="bg-white p-5 rounded-2xl border border-slate-200">
+              <span class="text-xs text-slate-400 font-bold uppercase">Rekap Bulanan</span>
+              <h4 id="reportBulan" class="text-xl font-bold text-slate-800 mt-2">Rp 0</h4>
             </div>
-            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-              <span class="text-xs text-slate-400 font-bold uppercase">Rekap Total Tahunan</span>
-              <h4 id="reportTahun" class="text-xl font-bold text-slate-800 mt-1">Rp 0</h4>
+            <div class="bg-white p-5 rounded-2xl border border-slate-200">
+              <span class="text-xs text-slate-400 font-bold uppercase">Rekap Tahunan</span>
+              <h4 id="reportTahun" class="text-xl font-bold text-slate-800 mt-2">Rp 0</h4>
             </div>
           </div>
 
           <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-            <div class="p-4 bg-slate-50 border-b border-slate-200 font-bold text-slate-700">Semua Jurnal Transaksi Keuangan</div>
+            <div class="p-4 bg-slate-50 border-b border-slate-200 font-bold text-slate-700">Semua Jurnal Transaksi</div>
             <div class="overflow-x-auto">
               <table class="w-full text-left border-collapse text-sm">
                 <thead>
@@ -494,7 +482,7 @@
                     <th class="p-3">Tipe</th>
                     <th class="p-3">Kategori</th>
                     <th class="p-3">Keterangan</th>
-                    <th class="p-3">Nominal</th>
+                    <th class="p-3">Jumlah</th>
                   </tr>
                 </thead>
                 <tbody id="tableLaporan"></tbody>
@@ -503,67 +491,45 @@
           </div>
         </section>
 
-        <!-- === VIEW: PENGATURAN === -->
+        <!-- VIEW: PENGATURAN -->
         <section id="viewPengaturan" class="hidden animate-popup space-y-6">
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            
-            <!-- Profil Sekolah -->
             <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-              <h3 class="font-bold text-slate-800 mb-4 border-b border-slate-100 pb-3">Profil Identitas Sekolah</h3>
+              <h3 class="font-bold text-slate-800 mb-4">Profil Sekolah</h3>
               <form onsubmit="saveProfile(event)" class="space-y-4">
                 <div>
                   <label class="text-xs font-semibold text-slate-600">Nama Sekolah</label>
-                  <input type="text" id="setSchoolName" class="w-full mt-1 border border-slate-300 rounded-xl p-2.5 text-sm focus:outline-none focus:border-emerald-500" required>
+                  <input type="text" id="setSchoolName" class="w-full mt-1 border border-slate-300 rounded-xl p-2.5 text-sm" required>
                 </div>
                 <div>
                   <label class="text-xs font-semibold text-slate-600">Alamat Sekolah</label>
-                  <textarea id="setSchoolAddress" class="w-full mt-1 border border-slate-300 rounded-xl p-2.5 text-sm focus:outline-none focus:border-emerald-500" rows="2" required></textarea>
+                  <textarea id="setSchoolAddress" class="w-full mt-1 border border-slate-300 rounded-xl p-2.5 text-sm" rows="3" required></textarea>
                 </div>
                 <div>
-                  <label class="text-xs font-semibold text-slate-600">Tarif SPP Standar (Rp/Bulan)</label>
-                  <input type="number" id="setSchoolSppTarif" class="w-full mt-1 border border-slate-300 rounded-xl p-2.5 text-sm focus:outline-none focus:border-emerald-500" required>
-                </div>
-                <div>
-                  <label class="text-xs font-semibold text-slate-600">Upload Logo Sekolah</label>
+                  <label class="text-xs font-semibold text-slate-600">Logo Sekolah</label>
                   <input type="file" id="setSchoolLogo" accept="image/*" class="w-full mt-1 text-sm border border-slate-300 rounded-xl p-2">
                 </div>
-                <button type="submit" class="bg-emerald-600 text-white font-bold px-5 py-2.5 rounded-xl hover:bg-emerald-500 transition">Simpan Identitas</button>
+                <button type="submit" class="bg-emerald-600 text-white font-bold px-5 py-2.5 rounded-xl hover:bg-emerald-500 transition">Simpan Profil</button>
               </form>
             </div>
 
-            <!-- Managemen Akun & Role -->
             <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-              <h3 class="font-bold text-slate-800 mb-4 border-b border-slate-100 pb-3">Pengaturan Akun & Role Akses</h3>
-              
-              <form onsubmit="addUser(event)" class="space-y-3 mb-6 bg-slate-50 p-4 rounded-xl border border-slate-200">
-                <h4 class="font-semibold text-xs text-slate-700">Tambah / Edit Akun Pengguna</h4>
-                <div>
-                  <input type="text" id="accUser" placeholder="Username" class="w-full border border-slate-300 rounded-xl p-2.5 text-sm focus:outline-none focus:border-emerald-500" required>
-                </div>
-                <div>
-                  <input type="text" id="accName" placeholder="Nama Lengkap Pengguna" class="w-full border border-slate-300 rounded-xl p-2.5 text-sm focus:outline-none focus:border-emerald-500" required>
-                </div>
-                <div>
-                  <input type="password" id="accPass" placeholder="Password" class="w-full border border-slate-300 rounded-xl p-2.5 text-sm focus:outline-none focus:border-emerald-500" required>
-                </div>
-                <div>
-                  <select id="accRole" class="w-full border border-slate-300 rounded-xl p-2.5 text-sm focus:outline-none focus:border-emerald-500" required>
-                    <option value="bendahara">Bendahara (Full Financial)</option>
-                    <option value="kepala_sekolah">Kepala Sekolah (Monitoring & Laporan)</option>
-                    <option value="yayasan">Yayasan (Monitoring & Laporan)</option>
-                    <option value="tata_usaha">Tata Usaha (Data Siswa & SPP)</option>
-                    <option value="admin">Administrator Utama</option>
-                  </select>
-                </div>
-                <button type="submit" class="w-full bg-slate-800 text-white font-bold py-2.5 rounded-xl hover:bg-slate-700 transition">Simpan Akun Pengguna</button>
+              <h3 class="font-bold text-slate-800 mb-4">Manajemen Hak Akses Akun</h3>
+              <form onsubmit="addUser(event)" class="space-y-3 mb-6">
+                <input type="text" id="accUser" placeholder="Username Baru" class="w-full border border-slate-300 rounded-xl p-2.5 text-sm" required>
+                <input type="password" id="accPass" placeholder="Password Baru" class="w-full border border-slate-300 rounded-xl p-2.5 text-sm" required>
+                <select id="accRole" class="w-full border border-slate-300 rounded-xl p-2.5 text-sm" required>
+                  <option value="bendahara">Bendahara (Akses Penuh Input & Cetak)</option>
+                  <option value="kepsek">Kepala Sekolah (Monitoring & Laporan)</option>
+                  <option value="yayasan">Yayasan (Monitoring & Laporan Audit)</option>
+                  <option value="tu">Tata Usaha (Akses SPP & Data Siswa)</option>
+                </select>
+                <button type="submit" class="w-full bg-slate-800 text-white font-bold py-2.5 rounded-xl hover:bg-slate-700 transition">Tambah Akun Pengguna</button>
               </form>
 
-              <h4 class="font-semibold text-xs text-slate-500 uppercase mb-2">Daftar Akun Terdaftar</h4>
-              <div class="overflow-y-auto max-h-48 border border-slate-200 rounded-xl">
-                <ul id="userList" class="divide-y divide-slate-100 text-sm"></ul>
-              </div>
+              <h4 class="font-semibold text-xs text-slate-500 uppercase mb-2">Daftar Pengguna Aktif</h4>
+              <ul id="userList" class="space-y-2 text-sm"></ul>
             </div>
-
           </div>
         </section>
 
@@ -571,154 +537,234 @@
     </main>
   </div>
 
-  <!-- ================= MODAL SISWA (TAMBAH / EDIT) ================= -->
-  <div id="modalSiswa" class="hidden fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl animate-popup space-y-4">
-      <div class="flex justify-between items-center border-b border-slate-100 pb-3">
-        <h3 id="modalSiswaTitle" class="font-bold text-slate-800 text-lg">Tambah Data Siswa</h3>
-        <button onclick="closeSiswaModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-xl"></i></button>
-      </div>
-
-      <form onsubmit="saveSiswa(event)" class="space-y-3">
-        <input type="hidden" id="siswaId">
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="text-xs font-semibold text-slate-600">NIS</label>
-            <input type="text" id="siswaNis" class="w-full mt-1 border border-slate-300 rounded-xl p-2.5 text-sm" required>
-          </div>
-          <div>
-            <label class="text-xs font-semibold text-slate-600">NISN</label>
-            <input type="text" id="siswaNisn" class="w-full mt-1 border border-slate-300 rounded-xl p-2.5 text-sm" required>
-          </div>
-        </div>
-        <div>
-          <label class="text-xs font-semibold text-slate-600">Nama Lengkap Siswa</label>
-          <input type="text" id="siswaNama" class="w-full mt-1 border border-slate-300 rounded-xl p-2.5 text-sm" required>
-        </div>
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="text-xs font-semibold text-slate-600">Kelas</label>
-            <select id="siswaKelas" class="w-full mt-1 border border-slate-300 rounded-xl p-2.5 text-sm" required>
-              <option value="1 SD IT">1 SD IT</option>
-              <option value="2 SD IT">2 SD IT</option>
-              <option value="3 SD IT">3 SD IT</option>
-              <option value="4 SD IT">4 SD IT</option>
-              <option value="5 SD IT">5 SD IT</option>
-              <option value="6 SD IT">6 SD IT</option>
-            </select>
-          </div>
-          <div>
-            <label class="text-xs font-semibold text-slate-600">Jenis Kelamin</label>
-            <select id="siswaJk" class="w-full mt-1 border border-slate-300 rounded-xl p-2.5 text-sm" required>
-              <option value="L">Laki-laki</option>
-              <option value="P">Perempuan</option>
-            </select>
-          </div>
-        </div>
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="text-xs font-semibold text-slate-600">Nama Orang Tua / Wali</label>
-            <input type="text" id="siswaOrtu" class="w-full mt-1 border border-slate-300 rounded-xl p-2.5 text-sm" required>
-          </div>
-          <div>
-            <label class="text-xs font-semibold text-slate-600">No. HP / WhatsApp</label>
-            <input type="text" id="siswaHp" class="w-full mt-1 border border-slate-300 rounded-xl p-2.5 text-sm" required>
-          </div>
-        </div>
-        <div>
-          <label class="text-xs font-semibold text-slate-600">Alamat Lengkap</label>
-          <textarea id="siswaAlamat" class="w-full mt-1 border border-slate-300 rounded-xl p-2 text-sm" rows="2" required></textarea>
-        </div>
-        <div>
-          <label class="text-xs font-semibold text-slate-600">Status Siswa</label>
-          <select id="siswaStatus" class="w-full mt-1 border border-slate-300 rounded-xl p-2.5 text-sm" required>
-            <option value="Aktif">Aktif</option>
-            <option value="Pindah">Pindah</option>
-            <option value="Lulus">Lulus</option>
-          </select>
-        </div>
-
-        <div class="flex justify-end gap-3 pt-3">
-          <button type="button" onclick="closeSiswaModal()" class="px-4 py-2.5 rounded-xl border border-slate-300 text-slate-600 font-semibold text-sm">Batal</button>
-          <button type="submit" class="px-5 py-2.5 rounded-xl bg-emerald-600 text-white font-bold text-sm hover:bg-emerald-500">Simpan Data Siswa</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- ================= TEMPLATE PRINT RECEIPT (HIDDEN) ================= -->
+  <!-- ================= TEMPLATE KUITANSI RESMI UNTUK STAMP & TTD ================= -->
   <div id="printArea" class="hidden">
-    <div style="width: 300px; font-family: 'Courier New', monospace; padding: 15px; border: 1px solid #ccc; font-size: 12px; color: #000;">
-      <div style="text-align: center; margin-bottom: 10px;">
-        <h3 id="receiptSchool" style="margin: 0; font-size: 14px; font-weight: bold;">SD IT AL-FATH</h3>
-        <p id="receiptAddr" style="margin: 2px 0 0 0; font-size: 9px;"></p>
-        <p style="margin: 5px 0;">--------------------------------</p>
-        <p style="font-weight: bold; margin: 0;">KUITANSI PEMBAYARAN</p>
-        <p style="margin: 5px 0;">--------------------------------</p>
+    <style>
+      .kuitansi-card {
+        background: #ffffff;
+        border: 2px solid #065f46;
+        border-radius: 8px;
+        padding: 24px 28px;
+        margin-bottom: 25px;
+        position: relative;
+        font-family: 'Times New Roman', Times, serif;
+        color: #0f172a;
+      }
+      .kuitansi-card::before {
+        content: "";
+        position: absolute;
+        top: 4px; left: 4px; right: 4px; bottom: 4px;
+        border: 1px dashed #059669;
+        border-radius: 6px;
+        pointer-events: none;
+      }
+      .header-table {
+        width: 100%; border-collapse: collapse; margin-bottom: 12px;
+        border-bottom: 3px double #065f46; padding-bottom: 10px;
+      }
+      .logo-icon {
+        width: 55px; height: 55px; background-color: #065f46; border-radius: 50%;
+        color: #fff; font-family: sans-serif; font-weight: bold; font-size: 20pt;
+        line-height: 55px; text-align: center; margin: 0 auto;
+      }
+      .school-title { font-family: sans-serif; font-size: 15pt; font-weight: bold; color: #065f46; margin: 0; }
+      .school-sub { font-family: sans-serif; font-size: 8.5pt; font-weight: 600; color: #047857; margin: 2px 0; }
+      .school-addr { font-size: 8pt; color: #475569; margin: 0; line-height: 1.2; }
+      
+      .title-bar { width: 100%; text-align: center; margin: 10px 0 12px 0; }
+      .receipt-heading { font-family: sans-serif; font-size: 13pt; font-weight: bold; text-decoration: underline; text-transform: uppercase; color: #065f46; margin: 0; }
+      .receipt-no { font-family: monospace; font-size: 9pt; color: #334155; margin-top: 3px; }
+
+      .details-table { width: 100%; border-collapse: collapse; margin-bottom: 12px; font-size: 9.5pt; }
+      .details-table td { padding: 4px 3px; vertical-align: top; }
+      .terbilang-box { background-color: #f0fdf4; border: 1px italic #bbf7d0; padding: 5px 8px; font-style: italic; font-weight: bold; color: #166534; border-radius: 4px; }
+
+      .amount-badge { display: inline-block; background-color: #065f46; color: #fff; font-family: sans-serif; font-size: 12pt; font-weight: bold; padding: 6px 16px; border-radius: 6px; margin-bottom: 10px; }
+
+      .signature-table { width: 100%; border-collapse: collapse; font-size: 9pt; text-align: center; }
+      .signature-table td { vertical-align: top; }
+      .stamp-placeholder {
+        position: absolute; top: -35px; left: 50%; transform: translateX(-50%);
+        width: 75px; height: 75px; border: 2px dashed #94a3b8; border-radius: 50%;
+        opacity: 0.35; line-height: 75px; font-size: 6.5pt; color: #64748b; font-family: sans-serif; pointer-events: none;
+      }
+      .receipt-footer { margin-top: 10px; border-top: 1px solid #e2e8f0; padding-top: 5px; font-size: 7.5pt; color: #64748b; font-style: italic; display: flex; justify-content: space-between; }
+      .page-break-line { border-bottom: 2px dashed #cbd5e1; margin: 15px 0; position: relative; }
+      .page-break-label { position: absolute; top: -9px; right: 20px; background: #fff; padding: 0 8px; font-size: 7pt; color: #94a3b8; font-family: sans-serif; }
+    </style>
+
+    <!-- LEMBAR 1: SISWA / WALI -->
+    <div class="kuitansi-card">
+      <table class="header-table">
+        <tr>
+          <td style="width: 60px;"><div class="logo-icon">SD</div></td>
+          <td style="padding-left: 12px;">
+            <h1 class="school-title print-school-name">SD IT AL-FATH BANDAR LAMPUNG</h1>
+            <p class="school-sub">YAYASAN PENDIDIKAN ISLAM AL-FATH LAMPUNG</p>
+            <p class="school-addr print-school-addr">Jl. Pendidikan No. 12, Kel. Rajabasa, Kota Bandar Lampung</p>
+          </td>
+        </tr>
+      </table>
+
+      <div class="title-bar">
+        <h2 class="receipt-heading">KUITANSI PEMBAYARAN RESMI</h2>
+        <div class="receipt-no">Nomor Transaksi: <strong id="kuitansiNo1">KW-SDIT/2026/001</strong></div>
       </div>
-      <p id="receiptDate" style="margin: 2px 0;"></p>
-      <p id="receiptType" style="margin: 2px 0;"></p>
-      <p id="receiptDetail" style="margin: 2px 0;"></p>
-      <p style="margin: 5px 0;">--------------------------------</p>
-      <p id="receiptTotal" style="font-size: 14px; font-weight: bold; margin: 8px 0; text-align: right;"></p>
-      <p style="margin: 5px 0;">--------------------------------</p>
-      <div style="text-align: center; margin-top: 15px; font-size: 10px;">
-        <p style="margin:0;">Terima Kasih Atas Pembayarannya</p>
-        <p style="margin:0; font-style: italic;">Jazakumullah Khairan Katsiran</p>
+
+      <table class="details-table">
+        <tr>
+          <td style="width: 23%; font-weight: bold;">Telah Diterima Dari</td>
+          <td style="width: 2%; font-weight: bold;">:</td>
+          <td style="width: 75%;" id="kuitansiPenerima1">-</td>
+        </tr>
+        <tr>
+          <td style="font-weight: bold;">Uang Sejumlah</td>
+          <td>:</td>
+          <td><div class="terbilang-box" id="kuitansiTerbilang1"># Zero Rupiah #</div></td>
+        </tr>
+        <tr>
+          <td style="font-weight: bold;">Untuk Pembayaran</td>
+          <td>:</td>
+          <td id="kuitansiKet1">-</td>
+        </tr>
+        <tr>
+          <td style="font-weight: bold;">Metode Pembayaran</td>
+          <td>:</td>
+          <td>Tunai / Kasir Keuangan Sekolah</td>
+        </tr>
+      </table>
+
+      <div class="amount-badge" id="kuitansiTotal1">TERABAYAR: Rp 0,-</div>
+
+      <table class="signature-table">
+        <tr>
+          <td style="width: 33%;">
+            <div style="margin-bottom: 50px;"><strong>Pembayar / Wali Murid</strong></div>
+            <div style="font-weight: bold; text-decoration: underline;" id="kuitansiWali1">(...........................)</div>
+            <div style="font-size: 8pt; color: #64748b;">Tanda Tangan</div>
+          </td>
+          <td style="width: 33%;">
+            <div style="margin-bottom: 50px;"><strong>Mengetahui,<br>Kepala Sekolah</strong></div>
+            <div style="font-weight: bold; text-decoration: underline;">Siti Rahmawati, S.Pd.I.</div>
+            <div style="font-size: 8pt; color: #64748b;">NIP. 19850412 201001 2 003</div>
+          </td>
+          <td style="width: 34%; position: relative;">
+            <div style="margin-bottom: 50px;">
+              <div style="font-size: 8.5pt;" id="kuitansiTanggal1">Bandar Lampung, -</div>
+              <strong>Bendahara Keuangan</strong>
+            </div>
+            <div class="stamp-placeholder">CAP SEKOLAH</div>
+            <div style="font-weight: bold; text-decoration: underline;" id="kuitansiPetugas1">Ahmad Surdiyanto, S.E.</div>
+            <div style="font-size: 8pt; color: #64748b;">NPY. 201801 042</div>
+          </td>
+        </tr>
+      </table>
+
+      <div class="receipt-footer">
+        <span>* Lembar 1: Untuk Siswa / Wali Murid</span>
+        <span>Dicetak secara resmi oleh Sistem Keuangan SD IT</span>
+      </div>
+    </div>
+
+    <div class="page-break-line">
+      <span class="page-break-label">POTONG DI SINI (ARSIP SEKOLAH)</span>
+    </div>
+
+    <!-- LEMBAR 2: ARSIP BENDAHARA -->
+    <div class="kuitansi-card" style="border-color: #475569;">
+      <table class="header-table" style="border-bottom-color: #475569;">
+        <tr>
+          <td style="width: 60px;"><div class="logo-icon" style="background-color: #334155;">SD</div></td>
+          <td style="padding-left: 12px;">
+            <h1 class="school-title print-school-name" style="color: #334155;">SD IT AL-FATH BANDAR LAMPUNG</h1>
+            <p class="school-sub" style="color: #475569;">YAYASAN PENDIDIKAN ISLAM AL-FATH LAMPUNG</p>
+            <p class="school-addr print-school-addr">Jl. Pendidikan No. 12, Kel. Rajabasa, Kota Bandar Lampung</p>
+          </td>
+        </tr>
+      </table>
+
+      <div class="title-bar">
+        <h2 class="receipt-heading" style="color: #334155;">KUITANSI PEMBAYARAN RESMI (ARSIP BENDAHARA)</h2>
+        <div class="receipt-no">Nomor Transaksi: <strong id="kuitansiNo2">KW-SDIT/2026/001</strong></div>
+      </div>
+
+      <table class="details-table">
+        <tr>
+          <td style="width: 23%; font-weight: bold;">Telah Diterima Dari</td>
+          <td style="width: 2%; font-weight: bold;">:</td>
+          <td style="width: 75%;" id="kuitansiPenerima2">-</td>
+        </tr>
+        <tr>
+          <td style="font-weight: bold;">Uang Sejumlah</td>
+          <td>:</td>
+          <td><div class="terbilang-box" id="kuitansiTerbilang2" style="background-color: #f1f5f9; border-color: #cbd5e1; color: #334155;"># Zero Rupiah #</div></td>
+        </tr>
+        <tr>
+          <td style="font-weight: bold;">Untuk Pembayaran</td>
+          <td>:</td>
+          <td id="kuitansiKet2">-</td>
+        </tr>
+      </table>
+
+      <div class="amount-badge" id="kuitansiTotal2" style="background-color: #334155;">TERABAYAR: Rp 0,-</div>
+
+      <table class="signature-table">
+        <tr>
+          <td style="width: 50%;">
+            <div style="margin-bottom: 50px;"><strong>Pembayar / Wali Murid</strong></div>
+            <div style="font-weight: bold; text-decoration: underline;" id="kuitansiWali2">(...........................)</div>
+          </td>
+          <td style="width: 50%; position: relative;">
+            <div style="margin-bottom: 50px;">
+              <div style="font-size: 8.5pt;" id="kuitansiTanggal2">Bandar Lampung, -</div>
+              <strong>Bendahara Keuangan</strong>
+            </div>
+            <div class="stamp-placeholder">CAP SEKOLAH</div>
+            <div style="font-weight: bold; text-decoration: underline;" id="kuitansiPetugas2">Ahmad Surdiyanto, S.E.</div>
+          </td>
+        </tr>
+      </table>
+
+      <div class="receipt-footer">
+        <span>* Lembar 2: Arsip Keuangan / Tata Usaha</span>
+        <span>Dicetak secara resmi oleh Sistem Keuangan SD IT</span>
       </div>
     </div>
   </div>
 
-  <!-- ================= APPLICATION JAVASCRIPT LOGIC ================= -->
+  <!-- ================= JAVASCRIPT APP LOGIC ================= -->
   <script>
     const DEMO_LICENSE = "SDIT-PRO-2026";
-    const SPP_MONTHS = ["Juli", "Agustus", "September", "Oktober", "November", "Desember", "Januari", "Februari", "Maret", "April", "Mei", "Juni"];
-
-    // Default Application State
     let state = {
       licenseActive: localStorage.getItem('sdit_license') === 'true',
-      currentUser: JSON.parse(sessionStorage.getItem('sdit_currentUser')) || null,
+      isLoggedIn: sessionStorage.getItem('sdit_login') === 'true',
+      currentUser: JSON.parse(sessionStorage.getItem('sdit_user')) || null,
+      siswa: JSON.parse(localStorage.getItem('sdit_siswa')) || [
+        { id: 1, nis: "2026001", nama: "Ahmad Fikri", kelas: "4 SD IT", wali: "Hendra Wijaya", hp: "082186087066", tarif: 350000, tagihan: 700000 }
+      ],
+      transactions: JSON.parse(localStorage.getItem('sdit_trx')) || [],
       school: JSON.parse(localStorage.getItem('sdit_school')) || {
-        name: "SD IT AL-FATH",
-        address: "Jl. Pendidikan No. 12, Kota Bandar Lampung",
-        logo: "https://cdn-icons-png.flaticon.com/512/2997/2997295.png",
-        sppTarif: 350000
+        name: "SD IT AL-FATH BANDAR LAMPUNG",
+        address: "Jl. Pendidikan No. 12, Kel. Rajabasa, Kota Bandar Lampung",
+        logo: "https://cdn-icons-png.flaticon.com/512/2997/2997295.png"
       },
       users: JSON.parse(localStorage.getItem('sdit_users')) || [
-        { user: "admin", pass: "admin123", name: "Administrator Utama", role: "admin" },
-        { user: "bendahara", pass: "ben123", name: "Ust. Ahmad Bendahara", role: "bendahara" },
-        { user: "kepsek", pass: "kepsek123", name: "Ust. Dr. Muhammad, M.Pd", role: "kepala_sekolah" },
-        { user: "yayasan", pass: "yayasan123", name: "H. Abdullah (Yayasan)", role: "yayasan" },
-        { user: "tu", pass: "tu123", name: "Siti Aminah, S.Kom (TU)", role: "tata_usaha" }
-      ],
-      students: JSON.parse(localStorage.getItem('sdit_students')) || [
-        { id: 101, nis: "2401", nisn: "0123456781", nama: "Muhammad Fatih", kelas: "1 SD IT", jenisKelamin: "L", namaOrangTua: "Budi Santoso", noHp: "081234567890", alamat: "Jl. Mawar No. 5", status: "Aktif" },
-        { id: 102, nis: "2402", nisn: "0123456782", nama: "Aisyah Humaira", kelas: "1 SD IT", jenisKelamin: "P", namaOrangTua: "Heri Kurniawan", noHp: "081298765432", alamat: "Jl. Melati No. 12", status: "Aktif" },
-        { id: 103, nis: "2301", nisn: "0123456783", nama: "Umar Al-Faruq", kelas: "2 SD IT", jenisKelamin: "L", namaOrangTua: "Rahman", noHp: "085211223344", alamat: "Jl. Anggrek No. 8", status: "Aktif" }
-      ],
-      transactions: JSON.parse(localStorage.getItem('sdit_trx')) || []
+        { user: "admin", pass: "admin123", role: "bendahara" },
+        { user: "kepsek", pass: "123456", role: "kepsek" },
+        { user: "yayasan", pass: "123456", role: "yayasan" },
+        { user: "tu", pass: "123456", role: "tu" }
+      ]
     };
 
     let chartInstance = null;
     let pieInstance = null;
 
-    // Window Init
     window.onload = function() {
       startRealtimeClock();
       checkStateNavigation();
       updateSchoolDisplay();
     };
 
-    // Role Permission Matrix Definition
-    const ROLE_PERMISSIONS = {
-      admin: ['dashboard', 'siswa', 'pemasukan', 'pengeluaran', 'spp', 'laporan', 'pengaturan'],
-      bendahara: ['dashboard', 'siswa', 'pemasukan', 'pengeluaran', 'spp', 'laporan'],
-      kepala_sekolah: ['dashboard', 'siswa', 'laporan'],
-      yayasan: ['dashboard', 'laporan'],
-      tata_usaha: ['dashboard', 'siswa', 'spp']
-    };
-
-    // Navigation and Page Guard
     function checkStateNavigation() {
       document.getElementById('licensePage').classList.add('hidden');
       document.getElementById('loginPage').classList.add('hidden');
@@ -726,27 +772,21 @@
 
       if (!state.licenseActive) {
         document.getElementById('licensePage').classList.remove('hidden');
-      } else if (!state.currentUser) {
+      } else if (!state.isLoggedIn) {
         document.getElementById('loginPage').classList.remove('hidden');
       } else {
         document.getElementById('mainApp').classList.remove('hidden');
-        renderSidebarMenu();
-        updateUserBadge();
-
-        // Default to first accessible tab
-        const allowedTabs = ROLE_PERMISSIONS[state.currentUser.role] || ['dashboard'];
-        switchTab(allowedTabs[0]);
+        applyRolePermissions();
+        renderDashboard();
       }
     }
 
-    // WA Buying Redirect
     function buyLicense(paket) {
       const waNum = "6282186087066";
-      const text = encodeURIComponent(`Halo, Saya ingin membeli Kode Lisensi Aplikasi Keuangan SD IT:\n*${paket}*\n\nMohon info prosedur pembayarannya.`);
+      const text = encodeURIComponent(`Halo, Saya ingin membeli Kode Lisensi Aplikasi Keuangan SD IT:\n*${paket}*\n\nMohon info prosedur selanjutnya.`);
       window.open(`https://wa.me/${waNum}?text=${text}`, '_blank');
     }
 
-    // License Activation
     function activateLicense() {
       const input = document.getElementById('inputLicenseKey').value.trim();
       if (input === DEMO_LICENSE || input.length >= 8) {
@@ -755,11 +795,10 @@
         alert('Lisensi Berhasil Diaktifkan!');
         checkStateNavigation();
       } else {
-        alert('Kode Lisensi tidak valid. Hubungi WA 082186087066');
+        alert('Kode Lisensi tidak valid.');
       }
     }
 
-    // Login Handler
     function handleLogin(e) {
       e.preventDefault();
       const u = document.getElementById('loginUser').value;
@@ -767,8 +806,10 @@
 
       const valid = state.users.find(x => x.user === u && x.pass === p);
       if (valid) {
+        state.isLoggedIn = true;
         state.currentUser = valid;
-        sessionStorage.setItem('sdit_currentUser', JSON.stringify(valid));
+        sessionStorage.setItem('sdit_login', 'true');
+        sessionStorage.setItem('sdit_user', JSON.stringify(valid));
         checkStateNavigation();
       } else {
         alert('Username atau Password Salah!');
@@ -776,47 +817,29 @@
     }
 
     function logout() {
+      state.isLoggedIn = false;
       state.currentUser = null;
-      sessionStorage.removeItem('sdit_currentUser');
+      sessionStorage.removeItem('sdit_login');
+      sessionStorage.removeItem('sdit_user');
       checkStateNavigation();
     }
 
-    function updateUserBadge() {
-      if(!state.currentUser) return;
-      document.getElementById('currentUserName').innerText = state.currentUser.name;
-      document.getElementById('currentUserRole').innerText = state.currentUser.role.replace('_', ' ');
-      document.getElementById('userAvatar').innerText = state.currentUser.name.charAt(0).toUpperCase();
-    }
+    function applyRolePermissions() {
+      if (!state.currentUser) return;
+      const role = state.currentUser.role;
+      document.getElementById('userRoleBadge').innerText = role.toUpperCase();
 
-    // Dynamic Sidebar Menu Generator based on Role Permissions
-    function renderSidebarMenu() {
-      const nav = document.getElementById('sidebarMenu');
-      nav.innerHTML = '';
+      document.querySelectorAll('.role-restricted').forEach(el => {
+        if (role === 'kepsek' || role === 'yayasan') el.style.display = 'none';
+        else el.style.display = 'flex';
+      });
 
-      const menuConfig = [
-        { id: 'dashboard', label: 'Dashboard', icon: 'fa-chart-pie' },
-        { id: 'siswa', label: 'Data Siswa', icon: 'fa-users' },
-        { id: 'pemasukan', label: 'Pemasukan', icon: 'fa-wallet' },
-        { id: 'pengeluaran', label: 'Pengeluaran', icon: 'fa-arrow-right-from-bracket' },
-        { id: 'spp', label: 'Bayar & Tagihan SPP', icon: 'fa-graduation-cap' },
-        { id: 'laporan', label: 'Laporan Rekap', icon: 'fa-file-invoice-dollar' },
-        { id: 'pengaturan', label: 'Pengaturan & Akun', icon: 'fa-gear' }
-      ];
-
-      const allowed = ROLE_PERMISSIONS[state.currentUser.role] || [];
-
-      menuConfig.forEach(m => {
-        if(allowed.includes(m.id)) {
-          nav.innerHTML += `
-            <button onclick="switchTab('${m.id}')" class="menu-item w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-slate-300 hover:bg-emerald-600 hover:text-white transition font-medium text-sm">
-              <i class="fa-solid ${m.icon} w-5"></i><span>${m.label}</span>
-            </button>
-          `;
-        }
+      document.querySelectorAll('.role-admin-only').forEach(el => {
+        if (role !== 'bendahara') el.style.display = 'none';
+        else el.style.display = 'flex';
       });
     }
 
-    // Realtime Clock
     function startRealtimeClock() {
       setInterval(() => {
         const now = new Date();
@@ -826,262 +849,178 @@
       }, 1000);
     }
 
-    // Tab Switcher
     function switchTab(tab) {
-      const allowed = ROLE_PERMISSIONS[state.currentUser.role] || [];
-      if(!allowed.includes(tab)) {
-        alert("Akses ditolak untuk Role akun ini.");
-        return;
-      }
-
-      const allViews = ['dashboard', 'siswa', 'pemasukan', 'pengeluaran', 'spp', 'laporan', 'pengaturan'];
-      allViews.forEach(v => {
-        const el = document.getElementById(`view${v.charAt(0).toUpperCase() + v.slice(1)}`);
-        if (el) el.classList.add('hidden');
+      const tabs = ['dashboard', 'siswa', 'pemasukan', 'pengeluaran', 'spp', 'laporan', 'pengaturan'];
+      tabs.forEach(t => {
+        const target = document.getElementById(`view${t.charAt(0).toUpperCase() + t.slice(1)}`);
+        if (target) target.classList.add('hidden');
       });
 
       const activeView = document.getElementById(`view${tab.charAt(0).toUpperCase() + tab.slice(1)}`);
       if (activeView) {
         activeView.classList.remove('hidden');
-        document.getElementById('pageTitle').innerText = tab.toUpperCase().replace('_', ' ');
+        document.getElementById('pageTitle').innerText = tab.toUpperCase();
       }
 
       if (tab === 'dashboard') renderDashboard();
       if (tab === 'siswa') renderSiswaTable();
       if (tab === 'pemasukan') renderTables('pemasukan');
       if (tab === 'pengeluaran') renderTables('pengeluaran');
-      if (tab === 'spp') initSppView();
+      if (tab === 'spp') { initSppDropdown(); renderTables('spp'); }
       if (tab === 'laporan') renderLaporan();
       if (tab === 'pengaturan') renderUsers();
     }
 
-    // ================= DATA SISWA FUNCTIONS =================
+    /* CRUD DATA SISWA */
+    function saveSiswa(e) {
+      e.preventDefault();
+      const id = document.getElementById('siswaId').value;
+      const nis = document.getElementById('siswaNis').value;
+      const nama = document.getElementById('siswaNama').value;
+      const kelas = document.getElementById('siswaKelas').value;
+      const wali = document.getElementById('siswaWali').value;
+      const hp = document.getElementById('siswaHp').value;
+      const tarif = parseFloat(document.getElementById('siswaTarif').value);
+
+      if (id) {
+        const idx = state.siswa.findIndex(s => s.id == id);
+        if (idx !== -1) {
+          state.siswa[idx] = { ...state.siswa[idx], nis, nama, kelas, wali, hp, tarif };
+        }
+      } else {
+        state.siswa.push({ id: Date.now(), nis, nama, kelas, wali, hp, tarif, tagihan: tarif });
+      }
+
+      localStorage.setItem('sdit_siswa', JSON.stringify(state.siswa));
+      resetSiswaForm();
+      renderSiswaTable();
+      alert('Data siswa berhasil disimpan!');
+    }
+
+    function editSiswa(id) {
+      const s = state.siswa.find(x => x.id === id);
+      if (!s) return;
+      document.getElementById('siswaId').value = s.id;
+      document.getElementById('siswaNis').value = s.nis;
+      document.getElementById('siswaNama').value = s.nama;
+      document.getElementById('siswaKelas').value = s.kelas;
+      document.getElementById('siswaWali').value = s.wali;
+      document.getElementById('siswaHp').value = s.hp;
+      document.getElementById('siswaTarif').value = s.tarif;
+      document.getElementById('siswaFormTitle').innerText = 'Edit Data Siswa';
+    }
+
+    function deleteSiswa(id) {
+      if (confirm('Hapus data siswa ini?')) {
+        state.siswa = state.siswa.filter(s => s.id !== id);
+        localStorage.setItem('sdit_siswa', JSON.stringify(state.siswa));
+        renderSiswaTable();
+      }
+    }
+
+    function resetSiswaForm() {
+      document.getElementById('siswaId').value = '';
+      document.getElementById('siswaNis').value = '';
+      document.getElementById('siswaNama').value = '';
+      document.getElementById('siswaWali').value = '';
+      document.getElementById('siswaHp').value = '';
+      document.getElementById('siswaTarif').value = '350000';
+      document.getElementById('siswaFormTitle').innerText = 'Tambah Data Siswa Baru';
+    }
+
     function renderSiswaTable() {
-      const search = document.getElementById('searchSiswa').value.toLowerCase();
-      const filterKelas = document.getElementById('filterKelasSiswa').value;
       const tbody = document.getElementById('tableSiswa');
       tbody.innerHTML = '';
-
-      // Hide Add Button if role isn't admin, bendahara, tu
-      const canEdit = ['admin', 'bendahara', 'tata_usaha'].includes(state.currentUser.role);
-      document.getElementById('btnAddSiswa').style.display = canEdit ? 'inline-flex' : 'none';
-
-      const filtered = state.students.filter(s => {
-        const matchName = s.nama.toLowerCase().includes(search) || s.nis.includes(search) || s.nisn.includes(search);
-        const matchKelas = filterKelas ? s.kelas === filterKelas : true;
-        return matchName && matchKelas;
-      });
-
-      filtered.forEach(s => {
+      state.siswa.forEach(s => {
         tbody.innerHTML += `
-          <tr class="border-b border-slate-100 hover:bg-slate-50 transition">
-            <td class="p-3 font-mono text-xs text-slate-500">${s.nis} / ${s.nisn}</td>
-            <td class="p-3 font-semibold text-slate-800">${s.nama}</td>
-            <td class="p-3"><span class="px-2 py-0.5 rounded-lg bg-emerald-100 text-emerald-800 font-semibold text-xs">${s.kelas}</span></td>
-            <td class="p-3">${s.jenisKelamin}</td>
-            <td class="p-3">${s.namaOrangTua}</td>
-            <td class="p-3 font-mono text-xs">${s.noHp}</td>
-            <td class="p-3"><span class="px-2 py-0.5 rounded-full text-xs font-bold ${s.status==='Aktif'?'bg-blue-100 text-blue-700':'bg-rose-100 text-rose-700'}">${s.status}</span></td>
-            <td class="p-3 text-center">
-              ${canEdit ? `
-                <button onclick="editSiswa(${s.id})" class="text-blue-600 hover:text-blue-800 mr-2" title="Edit"><i class="fa-solid fa-pen-to-square"></i></button>
-                <button onclick="deleteSiswa(${s.id})" class="text-rose-600 hover:text-rose-800" title="Hapus"><i class="fa-solid fa-trash"></i></button>
-              ` : '<span class="text-xs text-slate-400">View Only</span>'}
+          <tr class="border-b border-slate-100 hover:bg-slate-50">
+            <td class="p-3 font-semibold">${s.nis}</td>
+            <td class="p-3">${s.nama}</td>
+            <td class="p-3">${s.kelas}</td>
+            <td class="p-3">${s.wali}</td>
+            <td class="p-3">${s.hp || '-'}</td>
+            <td class="p-3 font-bold text-emerald-600">Rp ${s.tarif.toLocaleString('id-ID')}</td>
+            <td class="p-3">
+              <button onclick="editSiswa(${s.id})" class="text-amber-600 hover:text-amber-800 mr-3"><i class="fa-solid fa-pen"></i></button>
+              <button onclick="deleteSiswa(${s.id})" class="text-rose-600 hover:text-rose-800"><i class="fa-solid fa-trash"></i></button>
             </td>
           </tr>
         `;
       });
     }
 
-    function openSiswaModal() {
-      document.getElementById('siswaId').value = '';
-      document.getElementById('siswaNis').value = '';
-      document.getElementById('siswaNisn').value = '';
-      document.getElementById('siswaNama').value = '';
-      document.getElementById('siswaOrtu').value = '';
-      document.getElementById('siswaHp').value = '';
-      document.getElementById('siswaAlamat').value = '';
-      document.getElementById('modalSiswaTitle').innerText = 'Tambah Data Siswa Baru';
-      document.getElementById('modalSiswa').classList.remove('hidden');
-    }
-
-    function closeSiswaModal() {
-      document.getElementById('modalSiswa').classList.add('hidden');
-    }
-
-    function saveSiswa(e) {
-      e.preventDefault();
-      const id = document.getElementById('siswaId').value;
-      const data = {
-        id: id ? parseInt(id) : Date.now(),
-        nis: document.getElementById('siswaNis').value,
-        nisn: document.getElementById('siswaNisn').value,
-        nama: document.getElementById('siswaNama').value,
-        kelas: document.getElementById('siswaKelas').value,
-        jenisKelamin: document.getElementById('siswaJk').value,
-        namaOrangTua: document.getElementById('siswaOrtu').value,
-        noHp: document.getElementById('siswaHp').value,
-        alamat: document.getElementById('siswaAlamat').value,
-        status: document.getElementById('siswaStatus').value
-      };
-
-      if (id) {
-        const idx = state.students.findIndex(s => s.id === parseInt(id));
-        if (idx !== -1) state.students[idx] = data;
-      } else {
-        state.students.push(data);
-      }
-
-      localStorage.setItem('sdit_students', JSON.stringify(state.students));
-      closeSiswaModal();
-      renderSiswaTable();
-    }
-
-    function editSiswa(id) {
-      const s = state.students.find(x => x.id === id);
-      if (!s) return;
-      document.getElementById('siswaId').value = s.id;
-      document.getElementById('siswaNis').value = s.nis;
-      document.getElementById('siswaNisn').value = s.nisn;
-      document.getElementById('siswaNama').value = s.nama;
-      document.getElementById('siswaKelas').value = s.kelas;
-      document.getElementById('siswaJk').value = s.jenisKelamin;
-      document.getElementById('siswaOrtu').value = s.namaOrangTua;
-      document.getElementById('siswaHp').value = s.noHp;
-      document.getElementById('siswaAlamat').value = s.alamat;
-      document.getElementById('siswaStatus').value = s.status;
-
-      document.getElementById('modalSiswaTitle').innerText = 'Edit Data Siswa';
-      document.getElementById('modalSiswa').classList.remove('hidden');
-    }
-
-    function deleteSiswa(id) {
-      if (confirm('Apakah Anda yakin ingin menghapus siswa ini?')) {
-        state.students = state.students.filter(s => s.id !== id);
-        localStorage.setItem('sdit_students', JSON.stringify(state.students));
-        renderSiswaTable();
-      }
-    }
-
-    // ================= SPP & TAGIHAN ENGINE =================
-    function initSppView() {
-      // Populate Siswa Dropdown
-      const select = document.getElementById('sppSiswaSelect');
+    /* SISTEM SPP & TAGIHAN */
+    function initSppDropdown() {
+      const select = document.getElementById('sppSelectSiswa');
       select.innerHTML = '<option value="">-- Pilih Siswa --</option>';
-      state.students.filter(s => s.status === 'Aktif').forEach(s => {
+      state.siswa.forEach(s => {
         select.innerHTML += `<option value="${s.id}">${s.nama} (${s.kelas})</option>`;
       });
-
-      renderSppHistoryTable();
     }
 
-    function onSppSiswaSelected() {
-      const studentId = parseInt(document.getElementById('sppSiswaSelect').value);
-      const card = document.getElementById('sppStudentCard');
-      const listContainer = document.getElementById('sppMonthsList');
-
-      if (!studentId) {
-        card.classList.add('hidden');
-        listContainer.innerHTML = '<span class="text-xs text-slate-400 col-span-2 text-center py-4">Pilih siswa terlebih dahulu</span>';
-        document.getElementById('sppTotalCalculated').innerText = 'Rp 0';
-        return;
+    function loadSppSiswaInfo() {
+      const id = document.getElementById('sppSelectSiswa').value;
+      const s = state.siswa.find(x => x.id == id);
+      if (s) {
+        document.getElementById('sppTagihanDisplay').value = 'Rp ' + (s.tagihan || 0).toLocaleString('id-ID');
+        document.getElementById('sppTarifDisplay').value = 'Rp ' + s.tarif.toLocaleString('id-ID');
+        calcSPP();
       }
-
-      const s = state.students.find(x => x.id === studentId);
-      if (!s) return;
-
-      // Show student info card
-      document.getElementById('cardKelas').innerText = s.kelas;
-      document.getElementById('cardNisn').innerText = s.nisn;
-      document.getElementById('cardTarif').innerText = 'Rp ' + state.school.sppTarif.toLocaleString('id-ID');
-      card.classList.remove('hidden');
-
-      // Get Paid Months for this student
-      const paidMonths = [];
-      state.transactions.filter(t => t.type === 'spp' && t.studentId === s.id).forEach(t => {
-        if(t.monthsPaid) paidMonths.push(...t.monthsPaid);
-      });
-
-      // Calculate unpaid/overdue
-      const unpaidCount = SPP_MONTHS.length - paidMonths.length;
-      document.getElementById('cardTagihan').innerText = `${unpaidCount} Bulan (Rp ${(unpaidCount * state.school.sppTarif).toLocaleString('id-ID')})`;
-
-      // Render Checkbox list for months
-      listContainer.innerHTML = '';
-      SPP_MONTHS.forEach(m => {
-        const isPaid = paidMonths.includes(m);
-        listContainer.innerHTML += `
-          <label class="flex items-center space-x-2 p-2 rounded-lg border text-xs cursor-pointer ${isPaid ? 'bg-slate-200 border-slate-300 text-slate-400 opacity-60' : 'bg-white border-slate-200 text-slate-700 hover:border-emerald-500'}">
-            <input type="checkbox" value="${m}" ${isPaid ? 'disabled checked' : 'onchange="calculateSppTotal()"'} class="spp-month-checkbox rounded text-emerald-600 focus:ring-emerald-500">
-            <span>${m}</span>
-          </label>
-        `;
-      });
-
-      calculateSppTotal();
     }
 
-    function calculateSppTotal() {
-      const checkboxes = document.querySelectorAll('.spp-month-checkbox:checked:not(:disabled)');
-      const total = checkboxes.length * state.school.sppTarif;
-      document.getElementById('sppTotalCalculated').innerText = 'Rp ' + total.toLocaleString('id-ID');
+    function calcSPP() {
+      const id = document.getElementById('sppSelectSiswa').value;
+      const s = state.siswa.find(x => x.id == id);
+      const cnt = parseInt(document.getElementById('sppBulanCount').value) || 0;
+      const trf = s ? s.tarif : 0;
+      const tot = cnt * trf;
+      document.getElementById('sppTotalDisplay').value = 'Rp ' + tot.toLocaleString('id-ID');
     }
 
-    function processSppPayment() {
-      const studentId = parseInt(document.getElementById('sppSiswaSelect').value);
-      if (!studentId) return alert('Silakan pilih siswa terlebih dahulu.');
+    function paySPP(e) {
+      e.preventDefault();
+      const id = document.getElementById('sppSelectSiswa').value;
+      const s = state.siswa.find(x => x.id == id);
+      if (!s) return alert('Pilih siswa terlebih dahulu!');
 
-      const checkboxes = document.querySelectorAll('.spp-month-checkbox:checked:not(:disabled)');
-      if (checkboxes.length === 0) return alert('Pilih minimal satu bulan SPP untuk dibayar.');
+      const cnt = parseInt(document.getElementById('sppBulanCount').value);
+      const total = cnt * s.tarif;
 
-      const selectedMonths = Array.from(checkboxes).map(cb => cb.value);
-      const student = state.students.find(s => s.id === studentId);
-      const totalAmount = selectedMonths.length * state.school.sppTarif;
+      s.tagihan = Math.max(0, (s.tagihan || 0) - total);
+      localStorage.setItem('sdit_siswa', JSON.stringify(state.siswa));
 
       const trx = {
         id: Date.now(),
         type: 'spp',
-        kategori: 'SPP Bulanan',
-        nominal: totalAmount,
-        studentId: student.id,
-        studentName: student.nama,
-        studentClass: student.kelas,
-        monthsPaid: selectedMonths,
-        ket: `SPP ${student.nama} (${selectedMonths.join(', ')})`,
+        kategori: 'SPP Siswa',
+        nominal: total,
+        ket: `SPP ${s.nama} (${s.kelas}) - ${cnt} Bulan`,
+        nama: s.nama,
+        kelas: s.kelas,
+        wali: s.wali,
         date: new Date().toISOString()
       };
 
       state.transactions.push(trx);
       saveTrx();
       printReceipt(trx);
-      initSppView();
+      switchTab('spp');
     }
 
-    function renderSppHistoryTable() {
-      const search = document.getElementById('searchSppTrx').value.toLowerCase();
-      const tbody = document.getElementById('tableSppHistory');
-      tbody.innerHTML = '';
-
-      const filtered = state.transactions.filter(t => t.type === 'spp' && (t.studentName || '').toLowerCase().includes(search));
-      filtered.reverse().forEach(t => {
-        const d = new Date(t.date).toLocaleDateString('id-ID');
-        tbody.innerHTML += `
-          <tr class="border-b border-slate-100 hover:bg-slate-50">
-            <td class="p-3 text-xs text-slate-500">${d}</td>
-            <td class="p-3 font-semibold text-slate-800">${t.studentName || '-'}</td>
-            <td class="p-3 text-xs">${t.studentClass || '-'}</td>
-            <td class="p-3 text-xs">${(t.monthsPaid || []).join(', ')}</td>
-            <td class="p-3 font-bold text-emerald-600">Rp ${t.nominal.toLocaleString('id-ID')}</td>
-            <td class="p-3 text-center">
-              <button onclick="printReceiptById(${t.id})" class="text-blue-600 hover:text-blue-800 mr-2"><i class="fa-solid fa-print"></i></button>
-              ${['admin', 'bendahara'].includes(state.currentUser.role) ? `<button onclick="deleteTrx(${t.id}, 'spp')" class="text-rose-600 hover:text-rose-800"><i class="fa-solid fa-trash"></i></button>` : ''}
-            </td>
-          </tr>
-        `;
-      });
+    /* TRANSAKSI & KONVERSI TERBILANG */
+    function terbilang(angka) {
+      const bil = ["", "Satu", "Dua", "Tiga", "Empat", "Lima", "Enam", "Tujuh", "Delapan", "Sembilan", "Sepuluh", "Sebelas"];
+      if (angka < 12) return bil[angka];
+      if (angka < 20) return terbilang(angka - 10) + " Belas";
+      if (angka < 100) return terbilang(Math.floor(angka / 10)) + " Puluh " + terbilang(angka % 10);
+      if (angka < 200) return "Seratus " + terbilang(angka - 100);
+      if (angka < 1000) return terbilang(Math.floor(angka / 100)) + " Ratus " + terbilang(angka % 100);
+      if (angka < 2000) return "Seribu " + terbilang(angka - 1000);
+      if (angka < 1000000) return terbilang(Math.floor(angka / 1000)) + " Ribu " + terbilang(angka % 1000);
+      if (angka < 1000000000) return terbilang(Math.floor(angka / 1000000)) + " Juta " + terbilang(angka % 1000000);
+      return angka.toString();
     }
 
-    // ================= TRANSAKSI PEMASUKAN / PENGELUARAN =================
     function addTransaction(e, type) {
       e.preventDefault();
       const isIn = type === 'pemasukan';
@@ -1095,6 +1034,7 @@
         kategori: kategori,
         nominal: nominal,
         ket: ket,
+        wali: "-",
         date: new Date().toISOString()
       };
 
@@ -1104,12 +1044,66 @@
       switchTab(type);
     }
 
+    function printReceiptById(id) {
+      const trx = state.transactions.find(t => t.id === id);
+      if (trx) printReceipt(trx);
+    }
+
+    function printReceipt(trx) {
+      document.querySelectorAll('.print-school-name').forEach(el => el.innerText = state.school.name);
+      document.querySelectorAll('.print-school-addr').forEach(el => el.innerText = state.school.address);
+
+      const noTrx = "KW-SDIT/" + new Date(trx.date).getFullYear() + "/" + trx.id;
+      document.getElementById('kuitansiNo1').innerText = noTrx;
+      document.getElementById('kuitansiNo2').innerText = noTrx;
+
+      let penerimaText = "-";
+      let waliText = "(...........................)";
+
+      if (trx.type === 'spp') {
+        penerimaText = `${trx.wali || 'Wali Murid'} (Wali dari ${trx.nama} - ${trx.kelas})`;
+        waliText = trx.wali || 'Wali Murid';
+      } else {
+        penerimaText = trx.ket || "Umum / Mitra Sekolah";
+      }
+
+      document.getElementById('kuitansiPenerima1').innerText = penerimaText;
+      document.getElementById('kuitansiPenerima2').innerText = penerimaText;
+
+      const terbilangText = "# " + terbilang(trx.nominal) + " Rupiah #";
+      document.getElementById('kuitansiTerbilang1').innerText = terbilangText;
+      document.getElementById('kuitansiTerbilang2').innerText = terbilangText;
+
+      const detailText = `${trx.kategori} - ${trx.ket}`;
+      document.getElementById('kuitansiKet1').innerText = detailText;
+      document.getElementById('kuitansiKet2').innerText = detailText;
+
+      const totalText = "TERABAYAR: Rp " + trx.nominal.toLocaleString('id-ID') + ",-";
+      document.getElementById('kuitansiTotal1').innerText = totalText;
+      document.getElementById('kuitansiTotal2').innerText = totalText;
+
+      const dateStr = "Bandar Lampung, " + new Date(trx.date).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' });
+      document.getElementById('kuitansiTanggal1').innerText = dateStr;
+      document.getElementById('kuitansiTanggal2').innerText = dateStr;
+
+      document.getElementById('kuitansiWali1').innerText = waliText;
+      document.getElementById('kuitansiWali2').innerText = waliText;
+
+      const petugasName = state.currentUser ? state.currentUser.user : "Ahmad Surdiyanto, S.E.";
+      document.getElementById('kuitansiPetugas1').innerText = petugasName;
+      document.getElementById('kuitansiPetugas2').innerText = petugasName;
+
+      const printArea = document.getElementById('printArea');
+      printArea.classList.remove('hidden');
+      window.print();
+      printArea.classList.add('hidden');
+    }
+
     function deleteTrx(id, type) {
-      if(confirm('Hapus transaksi ini?')) {
+      if(confirm('Hapus Transaksi ini?')) {
         state.transactions = state.transactions.filter(t => t.id !== id);
         saveTrx();
-        if(type === 'spp') initSppView();
-        else renderTables(type);
+        renderTables(type);
       }
     }
 
@@ -1122,29 +1116,39 @@
       const tbody = document.getElementById(`table${type.charAt(0).toUpperCase() + type.slice(1)}`);
       tbody.innerHTML = '';
 
-      // Permissions check
-      const canEdit = ['admin', 'bendahara'].includes(state.currentUser.role);
-      const formContainer = document.getElementById(`form${type.charAt(0).toUpperCase() + type.slice(1)}Container`);
-      if(formContainer) formContainer.style.display = canEdit ? 'block' : 'none';
-
       filtered.reverse().forEach(t => {
         const d = new Date(t.date).toLocaleDateString('id-ID');
-        tbody.innerHTML += `
-          <tr class="border-b border-slate-100 hover:bg-slate-50">
-            <td class="p-3 text-xs text-slate-500">${d}</td>
-            <td class="p-3">${t.kategori}</td>
-            <td class="p-3">${t.ket}</td>
-            <td class="p-3 font-bold ${type==='pemasukan'?'text-emerald-600':'text-rose-600'}">Rp ${t.nominal.toLocaleString('id-ID')}</td>
-            <td class="p-3 text-center">
-              <button onclick="printReceiptById(${t.id})" class="text-blue-600 hover:text-blue-800 mr-2"><i class="fa-solid fa-print"></i></button>
-              ${canEdit ? `<button onclick="deleteTrx(${t.id}, '${type}')" class="text-rose-600 hover:text-rose-800"><i class="fa-solid fa-trash"></i></button>` : ''}
-            </td>
-          </tr>
-        `;
+        if (type === 'spp') {
+          tbody.innerHTML += `
+            <tr class="border-b border-slate-100 hover:bg-slate-50">
+              <td class="p-3">${d}</td>
+              <td class="p-3 font-semibold">${t.nama}</td>
+              <td class="p-3">${t.kelas}</td>
+              <td class="p-3">${t.ket}</td>
+              <td class="p-3 font-bold text-emerald-600">Rp ${t.nominal.toLocaleString('id-ID')}</td>
+              <td class="p-3">
+                <button onclick="printReceiptById(${t.id})" class="text-blue-600 hover:text-blue-800 mr-2"><i class="fa-solid fa-print"></i></button>
+                <button onclick="deleteTrx(${t.id}, 'spp')" class="text-rose-600 hover:text-rose-800"><i class="fa-solid fa-trash"></i></button>
+              </td>
+            </tr>
+          `;
+        } else {
+          tbody.innerHTML += `
+            <tr class="border-b border-slate-100 hover:bg-slate-50">
+              <td class="p-3">${d}</td>
+              <td class="p-3">${t.kategori}</td>
+              <td class="p-3">${t.ket}</td>
+              <td class="p-3 font-bold ${type==='pemasukan'?'text-emerald-600':'text-rose-600'}">Rp ${t.nominal.toLocaleString('id-ID')}</td>
+              <td class="p-3">
+                <button onclick="printReceiptById(${t.id})" class="text-blue-600 hover:text-blue-800 mr-2"><i class="fa-solid fa-print"></i></button>
+                <button onclick="deleteTrx(${t.id}, '${type}')" class="text-rose-600 hover:text-rose-800"><i class="fa-solid fa-trash"></i></button>
+              </td>
+            </tr>
+          `;
+        }
       });
     }
 
-    // ================= DASHBOARD RENDER =================
     function renderDashboard() {
       let totalIn = 0, totalOut = 0;
       state.transactions.forEach(t => {
@@ -1152,28 +1156,25 @@
         if(t.type === 'pengeluaran') totalOut += t.nominal;
       });
 
-      document.getElementById('dashTotalSiswa').innerText = state.students.filter(s=>s.status==='Aktif').length + ' Siswa';
       document.getElementById('dashPemasukan').innerText = 'Rp ' + totalIn.toLocaleString('id-ID');
       document.getElementById('dashPengeluaran').innerText = 'Rp ' + totalOut.toLocaleString('id-ID');
       document.getElementById('dashSaldo').innerText = 'Rp ' + (totalIn - totalOut).toLocaleString('id-ID');
 
-      // Bar Chart
       const ctxBar = document.getElementById('chartKeuangan').getContext('2d');
       if (chartInstance) chartInstance.destroy();
       chartInstance = new Chart(ctxBar, {
         type: 'bar',
         data: {
-          labels: ['Total Pemasukan', 'Total Pengeluaran', 'Saldo Kas Utama'],
+          labels: ['Total Pemasukan', 'Total Pengeluaran', 'Saldo Kas'],
           datasets: [{
             data: [totalIn, totalOut, totalIn - totalOut],
             backgroundColor: ['#10b981', '#f43f5e', '#3b82f6'],
             borderRadius: 8
           }]
         },
-        options: { plugins: { legend: { display: false } }, responsive: true }
+        options: { plugins: { legend: { display: false } } }
       });
 
-      // Pie Chart
       const ctxPie = document.getElementById('chartPie').getContext('2d');
       if (pieInstance) pieInstance.destroy();
       pieInstance = new Chart(ctxPie, {
@@ -1188,12 +1189,10 @@
             ],
             backgroundColor: ['#0d9488', '#10b981', '#f43f5e']
           }]
-        },
-        options: { responsive: true }
+        }
       });
     }
 
-    // ================= LAPORAN & EXCEL =================
     function renderLaporan() {
       const tbody = document.getElementById('tableLaporan');
       tbody.innerHTML = '';
@@ -1214,8 +1213,8 @@
 
         tbody.innerHTML += `
           <tr class="border-b border-slate-100 hover:bg-slate-50">
-            <td class="p-3 text-xs text-slate-500">${d.toLocaleDateString('id-ID')}</td>
-            <td class="p-3"><span class="px-2 py-0.5 text-xs font-bold rounded ${isIncome?'bg-emerald-100 text-emerald-700':'bg-rose-100 text-rose-700'}">${t.type.toUpperCase()}</span></td>
+            <td class="p-3">${d.toLocaleDateString('id-ID')}</td>
+            <td class="p-3"><span class="px-2 py-1 text-xs font-bold rounded-md ${isIncome?'bg-emerald-100 text-emerald-700':'bg-rose-100 text-rose-700'}">${t.type.toUpperCase()}</span></td>
             <td class="p-3">${t.kategori}</td>
             <td class="p-3">${t.ket}</td>
             <td class="p-3 font-bold ${isIncome?'text-emerald-600':'text-rose-600'}">Rp ${t.nominal.toLocaleString('id-ID')}</td>
@@ -1239,39 +1238,14 @@
 
       const ws = XLSX.utils.json_to_sheet(data);
       const wb = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, "Laporan Keuangan SD IT");
+      XLSX.utils.book_append_sheet(wb, ws, "Laporan Keuangan");
       XLSX.writeFile(wb, `Laporan_Keuangan_SDIT_${Date.now()}.xlsx`);
     }
 
-    // ================= CETAK KUITANSI =================
-    function printReceiptById(id) {
-      const trx = state.transactions.find(t => t.id === id);
-      if (trx) printReceipt(trx);
-    }
-
-    function printReceipt(trx) {
-      document.getElementById('receiptSchool').innerText = state.school.name;
-      document.getElementById('receiptAddr').innerText = state.school.address;
-      document.getElementById('receiptDate').innerText = "Tgl: " + new Date(trx.date).toLocaleString('id-ID');
-      document.getElementById('receiptType').innerText = "Tipe: " + trx.type.toUpperCase();
-      document.getElementById('receiptDetail').innerText = "Ket: " + trx.ket;
-      document.getElementById('receiptTotal').innerText = "TOTAL: Rp " + trx.nominal.toLocaleString('id-ID');
-
-      const printContents = document.getElementById('printArea').innerHTML;
-      const originalContents = document.body.innerHTML;
-
-      document.body.innerHTML = printContents;
-      window.print();
-      document.body.innerHTML = originalContents;
-      window.location.reload();
-    }
-
-    // ================= PENGATURAN & USER MANAGEMENT =================
     function saveProfile(e) {
       e.preventDefault();
       state.school.name = document.getElementById('setSchoolName').value;
       state.school.address = document.getElementById('setSchoolAddress').value;
-      state.school.sppTarif = parseFloat(document.getElementById('setSchoolSppTarif').value);
 
       const fileInput = document.getElementById('setSchoolLogo');
       if (fileInput.files && fileInput.files[0]) {
@@ -1280,13 +1254,13 @@
           state.school.logo = e.target.result;
           localStorage.setItem('sdit_school', JSON.stringify(state.school));
           updateSchoolDisplay();
-          alert('Profil & Tarif Sekolah Diperbarui!');
+          alert('Profil Sekolah Diperbarui!');
         };
         reader.readAsDataURL(fileInput.files[0]);
       } else {
         localStorage.setItem('sdit_school', JSON.stringify(state.school));
         updateSchoolDisplay();
-        alert('Profil & Tarif Sekolah Diperbarui!');
+        alert('Profil Sekolah Diperbarui!');
       }
     }
 
@@ -1297,32 +1271,23 @@
 
       document.getElementById('setSchoolName').value = state.school.name;
       document.getElementById('setSchoolAddress').value = state.school.address;
-      document.getElementById('setSchoolSppTarif').value = state.school.sppTarif;
     }
 
     function addUser(e) {
       e.preventDefault();
-      const u = document.getElementById('accUser').value.trim();
-      const n = document.getElementById('accName').value.trim();
-      const p = document.getElementById('accPass').value.trim();
+      const u = document.getElementById('accUser').value;
+      const p = document.getElementById('accPass').value;
       const r = document.getElementById('accRole').value;
 
-      const idx = state.users.findIndex(x => x.user === u);
-      if (idx !== -1) {
-        state.users[idx] = { user: u, pass: p, name: n, role: r };
-      } else {
-        state.users.push({ user: u, pass: p, name: n, role: r });
-      }
-
+      state.users.push({ user: u, pass: p, role: r });
       localStorage.setItem('sdit_users', JSON.stringify(state.users));
       renderUsers();
       document.getElementById('accUser').value = '';
-      document.getElementById('accName').value = '';
       document.getElementById('accPass').value = '';
     }
 
     function deleteUser(idx) {
-      if(state.users.length <= 1) return alert('Sistem membutuhkan minimal 1 akun terdaftar.');
+      if(state.users.length <= 1) return alert('Tidak bisa menghapus semua akun!');
       state.users.splice(idx, 1);
       localStorage.setItem('sdit_users', JSON.stringify(state.users));
       renderUsers();
@@ -1333,12 +1298,9 @@
       ul.innerHTML = '';
       state.users.forEach((u, i) => {
         ul.innerHTML += `
-          <li class="flex justify-between items-center p-3 hover:bg-slate-50 transition">
-            <div>
-              <div class="font-bold text-slate-800 text-xs">${u.name} <span class="text-slate-400 font-normal">(@${u.user})</span></div>
-              <span class="inline-block text-[10px] font-semibold uppercase px-2 py-0.5 rounded bg-slate-100 text-slate-600 border border-slate-200 mt-1">${u.role.replace('_', ' ')}</span>
-            </div>
-            <button onclick="deleteUser(${i})" class="text-rose-600 hover:text-rose-800 p-1"><i class="fa-solid fa-trash text-xs"></i></button>
+          <li class="flex justify-between items-center p-2.5 bg-slate-100 rounded-lg">
+            <span><i class="fa-solid fa-user mr-2 text-slate-500"></i><strong>${u.user}</strong> (<span class="text-xs uppercase text-emerald-700">${u.role}</span>)</span>
+            <button onclick="deleteUser(${i})" class="text-rose-600 hover:text-rose-800"><i class="fa-solid fa-trash"></i></button>
           </li>
         `;
       });
@@ -1346,23 +1308,3 @@
   </script>
 </body>
 </html>
-```
-
----
-
-### Key Highlights Update Version 2.0:
-
-1. **Menu Data Siswa Lengkap**:
-   - NIS, NISN, Nama Lengkap, Kelas (1–6 SD IT), Jenis Kelamin, Nama Orang Tua/Wali, No. HP/WA, Alamat, dan Status (Aktif/Pindah/Lulus).
-   - Pencarian siswa fleksibel & Filter per Kelas.
-
-2. **Hak Akses & Role Akun (RBAC)**:
-   - **Bendahara**: Akses penuh transaksi keuangan, SPP, dan Laporan.
-   - **Kepala Sekolah & Yayasan**: Akses khusus monitoring Dashboard & Laporan Rekap (Read-Only).
-   - **Tata Usaha (TU)**: Akses pengelolaan Data Siswa dan Layanan Pembayaran SPP.
-   - **Administrator**: Akses penuh ke seluruh sistem + Pengaturan Akun & Role.
-
-3. **Perhitungan & Tagihan SPP Otomatis**:
-   - Menampilkan ringkasan status tunggakan SPP siswa (12 Bulan ajaran: Juli s/d Juni).
-   - Pemilihan bulan tagihan menggunakan checkbox interaktif.
-   - Otomatis menghitung nominal total tagihan dan mencegah pembayaran ganda pada bulan yang sudah lunas.
