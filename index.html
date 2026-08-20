@@ -283,8 +283,9 @@
         <!-- VIEW: PEMASUKAN -->
         <section id="viewPemasukan" class="hidden animate-popup space-y-6">
           <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-            <h3 class="font-bold text-slate-800 mb-4">Tambah Transaksi Pemasukan</h3>
+            <h3 class="font-bold text-slate-800 mb-4" id="inFormTitle">Tambah Transaksi Pemasukan</h3>
             <form onsubmit="addTransaction(event, 'pemasukan')" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+              <input type="hidden" id="inEditId">
               <div>
                 <label class="text-xs font-semibold text-slate-600">Kategori</label>
                 <select id="inKategori" class="w-full mt-1 border border-slate-300 rounded-xl p-2.5 text-sm" required>
@@ -304,8 +305,9 @@
                 <label class="text-xs font-semibold text-slate-600">Keterangan</label>
                 <input type="text" id="inKet" class="w-full mt-1 border border-slate-300 rounded-xl p-2.5 text-sm" placeholder="Catatan..." required>
               </div>
-              <div class="flex items-end">
-                <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 rounded-xl transition">Simpan & Cetak Kuitansi</button>
+              <div class="flex items-end gap-2">
+                <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 rounded-xl transition">Simpan Transaksi</button>
+                <button type="button" onclick="resetInForm()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold px-3 py-2.5 rounded-xl transition">Batal</button>
               </div>
             </form>
           </div>
@@ -332,8 +334,9 @@
         <!-- VIEW: PENGELUARAN -->
         <section id="viewPengeluaran" class="hidden animate-popup space-y-6">
           <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-            <h3 class="font-bold text-slate-800 mb-4">Tambah Transaksi Pengeluaran</h3>
+            <h3 class="font-bold text-slate-800 mb-4" id="outFormTitle">Tambah Transaksi Pengeluaran</h3>
             <form onsubmit="addTransaction(event, 'pengeluaran')" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+              <input type="hidden" id="outEditId">
               <div>
                 <label class="text-xs font-semibold text-slate-600">Kategori</label>
                 <select id="outKategori" class="w-full mt-1 border border-slate-300 rounded-xl p-2.5 text-sm" required>
@@ -353,8 +356,9 @@
                 <label class="text-xs font-semibold text-slate-600">Keterangan</label>
                 <input type="text" id="outKet" class="w-full mt-1 border border-slate-300 rounded-xl p-2.5 text-sm" placeholder="Catatan..." required>
               </div>
-              <div class="flex items-end">
-                <button type="submit" class="w-full bg-rose-600 hover:bg-rose-500 text-white font-bold py-2.5 rounded-xl transition">Simpan & Cetak Kuitansi</button>
+              <div class="flex items-end gap-2">
+                <button type="submit" class="w-full bg-rose-600 hover:bg-rose-500 text-white font-bold py-2.5 rounded-xl transition">Simpan Transaksi</button>
+                <button type="button" onclick="resetOutForm()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold px-3 py-2.5 rounded-xl transition">Batal</button>
               </div>
             </form>
           </div>
@@ -381,49 +385,90 @@
         <!-- VIEW: PEMBAYARAN & TAGIHAN SPP -->
         <section id="viewSpp" class="hidden animate-popup space-y-6">
           <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-            <h3 class="font-bold text-slate-800 mb-4">Kalkulasi Tagihan & Pembayaran SPP</h3>
-            <form onsubmit="paySPP(event)" class="grid grid-cols-1 md:grid-cols-4 gap-4">
-              <div class="md:col-span-2">
-                <label class="text-xs font-semibold text-slate-600">Pilih Siswa</label>
-                <select id="sppSelectSiswa" onchange="loadSppSiswaInfo()" class="w-full mt-1 border border-slate-300 rounded-xl p-2.5 text-sm" required>
-                  <option value="">-- Pilih Siswa --</option>
-                </select>
-              </div>
-              <div>
-                <label class="text-xs font-semibold text-slate-600">Sisa Tagihan Sebelumnya</label>
-                <input type="text" id="sppTagihanDisplay" value="Rp 0" class="w-full mt-1 border border-slate-300 rounded-xl p-2.5 text-sm bg-rose-50 text-rose-700 font-bold" readonly>
-              </div>
-              <div>
-                <label class="text-xs font-semibold text-slate-600">Tarif / Bulan</label>
-                <input type="text" id="sppTarifDisplay" value="Rp 0" class="w-full mt-1 border border-slate-300 rounded-xl p-2.5 text-sm bg-slate-100" readonly>
-              </div>
-              
-              <!-- Pilihan Bulan Pembayaran -->
-              <div class="md:col-span-2">
-                <label class="text-xs font-semibold text-slate-600">Pilih Bulan Yang Dibayar</label>
-                <select id="sppBulanSelect" onchange="calcSPP()" class="w-full mt-1 border border-slate-300 rounded-xl p-2.5 text-sm" required multiple size="3">
-                  <option value="Januari">Januari</option>
-                  <option value="Februari">Februari</option>
-                  <option value="Maret">Maret</option>
-                  <option value="April">April</option>
-                  <option value="Mei">Mei</option>
-                  <option value="Juni">Juni</option>
-                  <option value="Juli">Juli</option>
-                  <option value="Agustus">Agustus</option>
-                  <option value="September">September</option>
-                  <option value="Oktober">Oktober</option>
-                  <option value="November">November</option>
-                  <option value="Desember">Desember</option>
-                </select>
-                <p class="text-[10px] text-slate-400 mt-1">* Tekan Ctrl (Windows) / Cmd (Mac) untuk memilih lebih dari 1 bulan</p>
+            <h3 class="font-bold text-slate-800 mb-4" id="sppFormTitle">Kalkulasi Tagihan & Pembayaran SPP</h3>
+            <form onsubmit="paySPP(event)" class="space-y-4">
+              <input type="hidden" id="sppEditId">
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label class="text-xs font-semibold text-slate-600">Pilih Siswa</label>
+                  <select id="sppSelectSiswa" onchange="loadSppSiswaInfo()" class="w-full mt-1 border border-slate-300 rounded-xl p-2.5 text-sm" required>
+                    <option value="">-- Pilih Siswa --</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="text-xs font-semibold text-slate-600">Sisa Tagihan Sebelumnya</label>
+                  <input type="text" id="sppTagihanDisplay" value="Rp 0" class="w-full mt-1 border border-slate-300 rounded-xl p-2.5 text-sm bg-rose-50 text-rose-700 font-bold" readonly>
+                </div>
+                <div>
+                  <label class="text-xs font-semibold text-slate-600">Tarif / Bulan</label>
+                  <input type="text" id="sppTarifDisplay" value="Rp 0" class="w-full mt-1 border border-slate-300 rounded-xl p-2.5 text-sm bg-slate-100" readonly>
+                </div>
               </div>
 
+              <!-- Pilihan Bulan Pembayaran Menggunakan Checkbox Grid -->
               <div>
-                <label class="text-xs font-semibold text-slate-600">Total Nominal Pembayaran</label>
-                <input type="text" id="sppTotalDisplay" value="Rp 0" class="w-full mt-1 border border-slate-300 rounded-xl p-2.5 text-sm bg-emerald-50 font-bold text-emerald-600" readonly>
+                <label class="text-xs font-semibold text-slate-600 block mb-2">Pilih Bulan Yang Dibayar (Centang Checklist)</label>
+                <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-3 bg-slate-50 p-4 rounded-xl border border-slate-200">
+                  <label class="flex items-center space-x-2 text-sm cursor-pointer hover:text-emerald-600">
+                    <input type="checkbox" name="sppBulanCheck" value="Januari" onchange="calcSPP()" class="w-4 h-4 text-emerald-600 rounded">
+                    <span>Januari</span>
+                  </label>
+                  <label class="flex items-center space-x-2 text-sm cursor-pointer hover:text-emerald-600">
+                    <input type="checkbox" name="sppBulanCheck" value="Februari" onchange="calcSPP()" class="w-4 h-4 text-emerald-600 rounded">
+                    <span>Februari</span>
+                  </label>
+                  <label class="flex items-center space-x-2 text-sm cursor-pointer hover:text-emerald-600">
+                    <input type="checkbox" name="sppBulanCheck" value="Maret" onchange="calcSPP()" class="w-4 h-4 text-emerald-600 rounded">
+                    <span>Maret</span>
+                  </label>
+                  <label class="flex items-center space-x-2 text-sm cursor-pointer hover:text-emerald-600">
+                    <input type="checkbox" name="sppBulanCheck" value="April" onchange="calcSPP()" class="w-4 h-4 text-emerald-600 rounded">
+                    <span>April</span>
+                  </label>
+                  <label class="flex items-center space-x-2 text-sm cursor-pointer hover:text-emerald-600">
+                    <input type="checkbox" name="sppBulanCheck" value="Mei" onchange="calcSPP()" class="w-4 h-4 text-emerald-600 rounded">
+                    <span>Mei</span>
+                  </label>
+                  <label class="flex items-center space-x-2 text-sm cursor-pointer hover:text-emerald-600">
+                    <input type="checkbox" name="sppBulanCheck" value="Juni" onchange="calcSPP()" class="w-4 h-4 text-emerald-600 rounded">
+                    <span>Juni</span>
+                  </label>
+                  <label class="flex items-center space-x-2 text-sm cursor-pointer hover:text-emerald-600">
+                    <input type="checkbox" name="sppBulanCheck" value="Juli" onchange="calcSPP()" class="w-4 h-4 text-emerald-600 rounded">
+                    <span>Juli</span>
+                  </label>
+                  <label class="flex items-center space-x-2 text-sm cursor-pointer hover:text-emerald-600">
+                    <input type="checkbox" name="sppBulanCheck" value="Agustus" onchange="calcSPP()" class="w-4 h-4 text-emerald-600 rounded">
+                    <span>Agustus</span>
+                  </label>
+                  <label class="flex items-center space-x-2 text-sm cursor-pointer hover:text-emerald-600">
+                    <input type="checkbox" name="sppBulanCheck" value="September" onchange="calcSPP()" class="w-4 h-4 text-emerald-600 rounded">
+                    <span>September</span>
+                  </label>
+                  <label class="flex items-center space-x-2 text-sm cursor-pointer hover:text-emerald-600">
+                    <input type="checkbox" name="sppBulanCheck" value="Oktober" onchange="calcSPP()" class="w-4 h-4 text-emerald-600 rounded">
+                    <span>Oktober</span>
+                  </label>
+                  <label class="flex items-center space-x-2 text-sm cursor-pointer hover:text-emerald-600">
+                    <input type="checkbox" name="sppBulanCheck" value="November" onchange="calcSPP()" class="w-4 h-4 text-emerald-600 rounded">
+                    <span>November</span>
+                  </label>
+                  <label class="flex items-center space-x-2 text-sm cursor-pointer hover:text-emerald-600">
+                    <input type="checkbox" name="sppBulanCheck" value="Desember" onchange="calcSPP()" class="w-4 h-4 text-emerald-600 rounded">
+                    <span>Desember</span>
+                  </label>
+                </div>
               </div>
-              <div class="flex items-end">
-                <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 rounded-xl transition">Bayar & Cetak Kuitansi Resmi</button>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-end">
+                <div>
+                  <label class="text-xs font-semibold text-slate-600">Total Nominal Pembayaran</label>
+                  <input type="text" id="sppTotalDisplay" value="Rp 0" class="w-full mt-1 border border-slate-300 rounded-xl p-2.5 text-sm bg-emerald-50 font-bold text-emerald-600" readonly>
+                </div>
+                <div class="flex items-center gap-2">
+                  <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 rounded-xl transition">Simpan & Cetak Kuitansi Resmi</button>
+                  <button type="button" onclick="resetSppForm()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold px-4 py-2.5 rounded-xl transition">Batal</button>
+                </div>
               </div>
             </form>
           </div>
@@ -777,12 +822,18 @@
     }
 
     function getSelectedMonths() {
-      const select = document.getElementById('sppBulanSelect');
+      const checkboxes = document.querySelectorAll('input[name="sppBulanCheck"]:checked');
       const selected = [];
-      for (let option of select.options) {
-        if (option.selected) selected.push(option.value);
-      }
+      checkboxes.forEach(cb => selected.push(cb.value));
       return selected;
+    }
+
+    function setSelectedMonths(monthsStr) {
+      const checkboxes = document.querySelectorAll('input[name="sppBulanCheck"]');
+      const monthsArray = monthsStr ? monthsStr.split(', ') : [];
+      checkboxes.forEach(cb => {
+        cb.checked = monthsArray.includes(cb.value);
+      });
     }
 
     function calcSPP() {
@@ -797,6 +848,7 @@
 
     function paySPP(e) {
       e.preventDefault();
+      const editId = document.getElementById('sppEditId').value;
       const id = document.getElementById('sppSelectSiswa').value;
       const s = state.siswa.find(x => x.id == id);
       if (!s) return alert('Pilih siswa terlebih dahulu!');
@@ -805,26 +857,71 @@
       if (months.length === 0) return alert('Pilih minimal satu bulan pembayaran!');
 
       const total = months.length * s.tarif;
-      s.tagihan = Math.max(0, (s.tagihan || 0) - total);
-      localStorage.setItem('sdit_siswa', JSON.stringify(state.siswa));
 
-      const trx = {
-        id: Date.now(),
-        type: 'spp',
-        kategori: 'SPP Siswa',
-        nominal: total,
-        ket: `SPP ${s.nama} (${s.kelas}) - Bulan: ${months.join(', ')}`,
-        nama: s.nama,
-        kelas: s.kelas,
-        wali: s.wali,
-        bulanList: months.join(', '),
-        date: new Date().toISOString()
-      };
+      if (editId) {
+        const idx = state.transactions.findIndex(t => t.id == editId);
+        if (idx !== -1) {
+          state.transactions[idx] = {
+            ...state.transactions[idx],
+            nominal: total,
+            ket: `SPP ${s.nama} (${s.kelas}) - Bulan: ${months.join(', ')}`,
+            nama: s.nama,
+            kelas: s.kelas,
+            wali: s.wali,
+            bulanList: months.join(', ')
+          };
+        }
+      } else {
+        s.tagihan = Math.max(0, (s.tagihan || 0) - total);
+        localStorage.setItem('sdit_siswa', JSON.stringify(state.siswa));
 
-      state.transactions.push(trx);
+        const trx = {
+          id: Date.now(),
+          type: 'spp',
+          kategori: 'SPP Siswa',
+          nominal: total,
+          ket: `SPP ${s.nama} (${s.kelas}) - Bulan: ${months.join(', ')}`,
+          nama: s.nama,
+          kelas: s.kelas,
+          wali: s.wali,
+          bulanList: months.join(', '),
+          date: new Date().toISOString()
+        };
+
+        state.transactions.push(trx);
+        printReceipt(trx);
+      }
+
       saveTrx();
-      printReceipt(trx);
+      resetSppForm();
       switchTab('spp');
+    }
+
+    function editTrxSpp(id) {
+      const trx = state.transactions.find(t => t.id === id);
+      if (!trx) return;
+
+      const s = state.siswa.find(x => x.nama === trx.nama);
+      if (s) {
+        document.getElementById('sppSelectSiswa').value = s.id;
+        loadSppSiswaInfo();
+      }
+
+      document.getElementById('sppEditId').value = trx.id;
+      setSelectedMonths(trx.bulanList);
+      calcSPP();
+
+      document.getElementById('sppFormTitle').innerText = 'Edit Pembayaran SPP';
+    }
+
+    function resetSppForm() {
+      document.getElementById('sppEditId').value = '';
+      document.getElementById('sppSelectSiswa').value = '';
+      document.getElementById('sppTagihanDisplay').value = 'Rp 0';
+      document.getElementById('sppTarifDisplay').value = 'Rp 0';
+      document.getElementById('sppTotalDisplay').value = 'Rp 0';
+      setSelectedMonths('');
+      document.getElementById('sppFormTitle').innerText = 'Kalkulasi Tagihan & Pembayaran SPP';
     }
 
     /* KONVERSI TERBILANG */
@@ -844,24 +941,72 @@
     function addTransaction(e, type) {
       e.preventDefault();
       const isIn = type === 'pemasukan';
+      const editId = document.getElementById(isIn ? 'inEditId' : 'outEditId').value;
       const kategori = document.getElementById(isIn ? 'inKategori' : 'outKategori').value;
       const nominal = parseFloat(document.getElementById(isIn ? 'inNominal' : 'outNominal').value);
       const ket = document.getElementById(isIn ? 'inKet' : 'outKet').value;
 
-      const trx = {
-        id: Date.now(),
-        type: type,
-        kategori: kategori,
-        nominal: nominal,
-        ket: ket,
-        wali: "-",
-        date: new Date().toISOString()
-      };
+      if (editId) {
+        const idx = state.transactions.findIndex(t => t.id == editId);
+        if (idx !== -1) {
+          state.transactions[idx] = {
+            ...state.transactions[idx],
+            kategori: kategori,
+            nominal: nominal,
+            ket: ket
+          };
+        }
+      } else {
+        const trx = {
+          id: Date.now(),
+          type: type,
+          kategori: kategori,
+          nominal: nominal,
+          ket: ket,
+          wali: "-",
+          date: new Date().toISOString()
+        };
+        state.transactions.push(trx);
+      }
 
-      state.transactions.push(trx);
       saveTrx();
-      printReceipt(trx);
+      if (isIn) resetInForm(); else resetOutForm();
       switchTab(type);
+      alert('Transaksi berhasil disimpan!');
+    }
+
+    function editTrxIn(id) {
+      const trx = state.transactions.find(t => t.id === id);
+      if (!trx) return;
+      document.getElementById('inEditId').value = trx.id;
+      document.getElementById('inKategori').value = trx.kategori;
+      document.getElementById('inNominal').value = trx.nominal;
+      document.getElementById('inKet').value = trx.ket;
+      document.getElementById('inFormTitle').innerText = 'Edit Transaksi Pemasukan';
+    }
+
+    function resetInForm() {
+      document.getElementById('inEditId').value = '';
+      document.getElementById('inNominal').value = '';
+      document.getElementById('inKet').value = '';
+      document.getElementById('inFormTitle').innerText = 'Tambah Transaksi Pemasukan';
+    }
+
+    function editTrxOut(id) {
+      const trx = state.transactions.find(t => t.id === id);
+      if (!trx) return;
+      document.getElementById('outEditId').value = trx.id;
+      document.getElementById('outKategori').value = trx.kategori;
+      document.getElementById('outNominal').value = trx.nominal;
+      document.getElementById('outKet').value = trx.ket;
+      document.getElementById('outFormTitle').innerText = 'Edit Transaksi Pengeluaran';
+    }
+
+    function resetOutForm() {
+      document.getElementById('outEditId').value = '';
+      document.getElementById('outNominal').value = '';
+      document.getElementById('outKet').value = '';
+      document.getElementById('outFormTitle').innerText = 'Tambah Transaksi Pengeluaran';
     }
 
     function printReceiptById(id) {
@@ -869,7 +1014,7 @@
       if (trx) printReceipt(trx);
     }
 
-    /* CETAK KUITANSI DENGAN KOP POSISI TENGAH, TERBAYAR & TANPA KEPALA SEKOLAH */
+    /* CETAK KUITANSI TANPA NPY BENDAHARA */
     function printReceipt(trx) {
       const schoolName = state.school.name;
       const schoolAddr = state.school.address;
@@ -908,7 +1053,6 @@
               content: ""; position: absolute; top: 4px; left: 4px; right: 4px; bottom: 4px;
               border: 1px dashed #059669; border-radius: 6px; pointer-events: none;
             }
-            /* KOP & LOGO POSISI TENGAH */
             .header-center {
               text-align: center; margin-bottom: 10px; border-bottom: 3px double #065f46; padding-bottom: 8px;
             }
@@ -996,7 +1140,6 @@
                   </div>
                   <div class="stamp-placeholder">CAP SEKOLAH</div>
                   <div style="font-weight: bold; text-decoration: underline;">${petugas}</div>
-                  <div style="font-size: 8pt; color: #64748b;">NPY. 201801 042</div>
                 </td>
               </tr>
             </table>
@@ -1124,8 +1267,23 @@
               <td class="p-3">${t.bulanList || t.ket}</td>
               <td class="p-3 font-bold text-emerald-600">Rp ${t.nominal.toLocaleString('id-ID')}</td>
               <td class="p-3">
+                <button onclick="editTrxSpp(${t.id})" class="text-amber-600 hover:text-amber-800 mr-2"><i class="fa-solid fa-pen"></i></button>
                 <button onclick="printReceiptById(${t.id})" class="text-blue-600 hover:text-blue-800 mr-2"><i class="fa-solid fa-print"></i></button>
                 <button onclick="deleteTrx(${t.id}, 'spp')" class="text-rose-600 hover:text-rose-800"><i class="fa-solid fa-trash"></i></button>
+              </td>
+            </tr>
+          `;
+        } else if (type === 'pemasukan') {
+          tbody.innerHTML += `
+            <tr class="border-b border-slate-100 hover:bg-slate-50">
+              <td class="p-3">${d}</td>
+              <td class="p-3">${t.kategori}</td>
+              <td class="p-3">${t.ket}</td>
+              <td class="p-3 font-bold text-emerald-600">Rp ${t.nominal.toLocaleString('id-ID')}</td>
+              <td class="p-3">
+                <button onclick="editTrxIn(${t.id})" class="text-amber-600 hover:text-amber-800 mr-2"><i class="fa-solid fa-pen"></i></button>
+                <button onclick="printReceiptById(${t.id})" class="text-blue-600 hover:text-blue-800 mr-2"><i class="fa-solid fa-print"></i></button>
+                <button onclick="deleteTrx(${t.id}, 'pemasukan')" class="text-rose-600 hover:text-rose-800"><i class="fa-solid fa-trash"></i></button>
               </td>
             </tr>
           `;
@@ -1135,10 +1293,11 @@
               <td class="p-3">${d}</td>
               <td class="p-3">${t.kategori}</td>
               <td class="p-3">${t.ket}</td>
-              <td class="p-3 font-bold ${type==='pemasukan'?'text-emerald-600':'text-rose-600'}">Rp ${t.nominal.toLocaleString('id-ID')}</td>
+              <td class="p-3 font-bold text-rose-600">Rp ${t.nominal.toLocaleString('id-ID')}</td>
               <td class="p-3">
+                <button onclick="editTrxOut(${t.id})" class="text-amber-600 hover:text-amber-800 mr-2"><i class="fa-solid fa-pen"></i></button>
                 <button onclick="printReceiptById(${t.id})" class="text-blue-600 hover:text-blue-800 mr-2"><i class="fa-solid fa-print"></i></button>
-                <button onclick="deleteTrx(${t.id}, '${type}')" class="text-rose-600 hover:text-rose-800"><i class="fa-solid fa-trash"></i></button>
+                <button onclick="deleteTrx(${t.id}, 'pengeluaran')" class="text-rose-600 hover:text-rose-800"><i class="fa-solid fa-trash"></i></button>
               </td>
             </tr>
           `;
