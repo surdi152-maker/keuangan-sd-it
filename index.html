@@ -29,20 +29,6 @@
       transform: translateY(-3px);
       box-shadow: 0 10px 20px -5px rgba(16, 185, 129, 0.3);
     }
-
-    /* Style Khusus Media Cetak Kuitansi */
-    @media print {
-      body * { visibility: hidden !important; }
-      #printArea, #printArea * { visibility: visible !important; }
-      #printArea {
-        position: absolute !important;
-        left: 0 !important;
-        top: 0 !important;
-        width: 100% !important;
-        background: #fff !important;
-      }
-      @page { size: A4 portrait; margin: 8mm; }
-    }
   </style>
 </head>
 <body class="bg-slate-900 text-slate-800 antialiased min-h-screen">
@@ -319,7 +305,7 @@
                 <input type="text" id="inKet" class="w-full mt-1 border border-slate-300 rounded-xl p-2.5 text-sm" placeholder="Catatan..." required>
               </div>
               <div class="flex items-end">
-                <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 rounded-xl transition">Simpan & Cetak</button>
+                <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 rounded-xl transition">Simpan & Cetak Kuitansi</button>
               </div>
             </form>
           </div>
@@ -368,7 +354,7 @@
                 <input type="text" id="outKet" class="w-full mt-1 border border-slate-300 rounded-xl p-2.5 text-sm" placeholder="Catatan..." required>
               </div>
               <div class="flex items-end">
-                <button type="submit" class="w-full bg-rose-600 hover:bg-rose-500 text-white font-bold py-2.5 rounded-xl transition">Simpan & Cetak</button>
+                <button type="submit" class="w-full bg-rose-600 hover:bg-rose-500 text-white font-bold py-2.5 rounded-xl transition">Simpan & Cetak Kuitansi</button>
               </div>
             </form>
           </div>
@@ -535,201 +521,6 @@
 
       </div>
     </main>
-  </div>
-
-  <!-- ================= TEMPLATE KUITANSI RESMI UNTUK STAMP & TTD ================= -->
-  <div id="printArea" class="hidden">
-    <style>
-      .kuitansi-card {
-        background: #ffffff;
-        border: 2px solid #065f46;
-        border-radius: 8px;
-        padding: 24px 28px;
-        margin-bottom: 25px;
-        position: relative;
-        font-family: 'Times New Roman', Times, serif;
-        color: #0f172a;
-      }
-      .kuitansi-card::before {
-        content: "";
-        position: absolute;
-        top: 4px; left: 4px; right: 4px; bottom: 4px;
-        border: 1px dashed #059669;
-        border-radius: 6px;
-        pointer-events: none;
-      }
-      .header-table {
-        width: 100%; border-collapse: collapse; margin-bottom: 12px;
-        border-bottom: 3px double #065f46; padding-bottom: 10px;
-      }
-      .logo-icon {
-        width: 55px; height: 55px; background-color: #065f46; border-radius: 50%;
-        color: #fff; font-family: sans-serif; font-weight: bold; font-size: 20pt;
-        line-height: 55px; text-align: center; margin: 0 auto;
-      }
-      .school-title { font-family: sans-serif; font-size: 15pt; font-weight: bold; color: #065f46; margin: 0; }
-      .school-sub { font-family: sans-serif; font-size: 8.5pt; font-weight: 600; color: #047857; margin: 2px 0; }
-      .school-addr { font-size: 8pt; color: #475569; margin: 0; line-height: 1.2; }
-      
-      .title-bar { width: 100%; text-align: center; margin: 10px 0 12px 0; }
-      .receipt-heading { font-family: sans-serif; font-size: 13pt; font-weight: bold; text-decoration: underline; text-transform: uppercase; color: #065f46; margin: 0; }
-      .receipt-no { font-family: monospace; font-size: 9pt; color: #334155; margin-top: 3px; }
-
-      .details-table { width: 100%; border-collapse: collapse; margin-bottom: 12px; font-size: 9.5pt; }
-      .details-table td { padding: 4px 3px; vertical-align: top; }
-      .terbilang-box { background-color: #f0fdf4; border: 1px italic #bbf7d0; padding: 5px 8px; font-style: italic; font-weight: bold; color: #166534; border-radius: 4px; }
-
-      .amount-badge { display: inline-block; background-color: #065f46; color: #fff; font-family: sans-serif; font-size: 12pt; font-weight: bold; padding: 6px 16px; border-radius: 6px; margin-bottom: 10px; }
-
-      .signature-table { width: 100%; border-collapse: collapse; font-size: 9pt; text-align: center; }
-      .signature-table td { vertical-align: top; }
-      .stamp-placeholder {
-        position: absolute; top: -35px; left: 50%; transform: translateX(-50%);
-        width: 75px; height: 75px; border: 2px dashed #94a3b8; border-radius: 50%;
-        opacity: 0.35; line-height: 75px; font-size: 6.5pt; color: #64748b; font-family: sans-serif; pointer-events: none;
-      }
-      .receipt-footer { margin-top: 10px; border-top: 1px solid #e2e8f0; padding-top: 5px; font-size: 7.5pt; color: #64748b; font-style: italic; display: flex; justify-content: space-between; }
-      .page-break-line { border-bottom: 2px dashed #cbd5e1; margin: 15px 0; position: relative; }
-      .page-break-label { position: absolute; top: -9px; right: 20px; background: #fff; padding: 0 8px; font-size: 7pt; color: #94a3b8; font-family: sans-serif; }
-    </style>
-
-    <!-- LEMBAR 1: SISWA / WALI -->
-    <div class="kuitansi-card">
-      <table class="header-table">
-        <tr>
-          <td style="width: 60px;"><div class="logo-icon">SD</div></td>
-          <td style="padding-left: 12px;">
-            <h1 class="school-title print-school-name">SD IT AL-FATH BANDAR LAMPUNG</h1>
-            <p class="school-sub">YAYASAN PENDIDIKAN ISLAM AL-FATH LAMPUNG</p>
-            <p class="school-addr print-school-addr">Jl. Pendidikan No. 12, Kel. Rajabasa, Kota Bandar Lampung</p>
-          </td>
-        </tr>
-      </table>
-
-      <div class="title-bar">
-        <h2 class="receipt-heading">KUITANSI PEMBAYARAN RESMI</h2>
-        <div class="receipt-no">Nomor Transaksi: <strong id="kuitansiNo1">KW-SDIT/2026/001</strong></div>
-      </div>
-
-      <table class="details-table">
-        <tr>
-          <td style="width: 23%; font-weight: bold;">Telah Diterima Dari</td>
-          <td style="width: 2%; font-weight: bold;">:</td>
-          <td style="width: 75%;" id="kuitansiPenerima1">-</td>
-        </tr>
-        <tr>
-          <td style="font-weight: bold;">Uang Sejumlah</td>
-          <td>:</td>
-          <td><div class="terbilang-box" id="kuitansiTerbilang1"># Zero Rupiah #</div></td>
-        </tr>
-        <tr>
-          <td style="font-weight: bold;">Untuk Pembayaran</td>
-          <td>:</td>
-          <td id="kuitansiKet1">-</td>
-        </tr>
-        <tr>
-          <td style="font-weight: bold;">Metode Pembayaran</td>
-          <td>:</td>
-          <td>Tunai / Kasir Keuangan Sekolah</td>
-        </tr>
-      </table>
-
-      <div class="amount-badge" id="kuitansiTotal1">TERABAYAR: Rp 0,-</div>
-
-      <table class="signature-table">
-        <tr>
-          <td style="width: 33%;">
-            <div style="margin-bottom: 50px;"><strong>Pembayar / Wali Murid</strong></div>
-            <div style="font-weight: bold; text-decoration: underline;" id="kuitansiWali1">(...........................)</div>
-            <div style="font-size: 8pt; color: #64748b;">Tanda Tangan</div>
-          </td>
-          <td style="width: 33%;">
-            <div style="margin-bottom: 50px;"><strong>Mengetahui,<br>Kepala Sekolah</strong></div>
-            <div style="font-weight: bold; text-decoration: underline;">Siti Rahmawati, S.Pd.I.</div>
-            <div style="font-size: 8pt; color: #64748b;">NIP. 19850412 201001 2 003</div>
-          </td>
-          <td style="width: 34%; position: relative;">
-            <div style="margin-bottom: 50px;">
-              <div style="font-size: 8.5pt;" id="kuitansiTanggal1">Bandar Lampung, -</div>
-              <strong>Bendahara Keuangan</strong>
-            </div>
-            <div class="stamp-placeholder">CAP SEKOLAH</div>
-            <div style="font-weight: bold; text-decoration: underline;" id="kuitansiPetugas1">Ahmad Surdiyanto, S.E.</div>
-            <div style="font-size: 8pt; color: #64748b;">NPY. 201801 042</div>
-          </td>
-        </tr>
-      </table>
-
-      <div class="receipt-footer">
-        <span>* Lembar 1: Untuk Siswa / Wali Murid</span>
-        <span>Dicetak secara resmi oleh Sistem Keuangan SD IT</span>
-      </div>
-    </div>
-
-    <div class="page-break-line">
-      <span class="page-break-label">POTONG DI SINI (ARSIP SEKOLAH)</span>
-    </div>
-
-    <!-- LEMBAR 2: ARSIP BENDAHARA -->
-    <div class="kuitansi-card" style="border-color: #475569;">
-      <table class="header-table" style="border-bottom-color: #475569;">
-        <tr>
-          <td style="width: 60px;"><div class="logo-icon" style="background-color: #334155;">SD</div></td>
-          <td style="padding-left: 12px;">
-            <h1 class="school-title print-school-name" style="color: #334155;">SD IT AL-FATH BANDAR LAMPUNG</h1>
-            <p class="school-sub" style="color: #475569;">YAYASAN PENDIDIKAN ISLAM AL-FATH LAMPUNG</p>
-            <p class="school-addr print-school-addr">Jl. Pendidikan No. 12, Kel. Rajabasa, Kota Bandar Lampung</p>
-          </td>
-        </tr>
-      </table>
-
-      <div class="title-bar">
-        <h2 class="receipt-heading" style="color: #334155;">KUITANSI PEMBAYARAN RESMI (ARSIP BENDAHARA)</h2>
-        <div class="receipt-no">Nomor Transaksi: <strong id="kuitansiNo2">KW-SDIT/2026/001</strong></div>
-      </div>
-
-      <table class="details-table">
-        <tr>
-          <td style="width: 23%; font-weight: bold;">Telah Diterima Dari</td>
-          <td style="width: 2%; font-weight: bold;">:</td>
-          <td style="width: 75%;" id="kuitansiPenerima2">-</td>
-        </tr>
-        <tr>
-          <td style="font-weight: bold;">Uang Sejumlah</td>
-          <td>:</td>
-          <td><div class="terbilang-box" id="kuitansiTerbilang2" style="background-color: #f1f5f9; border-color: #cbd5e1; color: #334155;"># Zero Rupiah #</div></td>
-        </tr>
-        <tr>
-          <td style="font-weight: bold;">Untuk Pembayaran</td>
-          <td>:</td>
-          <td id="kuitansiKet2">-</td>
-        </tr>
-      </table>
-
-      <div class="amount-badge" id="kuitansiTotal2" style="background-color: #334155;">TERABAYAR: Rp 0,-</div>
-
-      <table class="signature-table">
-        <tr>
-          <td style="width: 50%;">
-            <div style="margin-bottom: 50px;"><strong>Pembayar / Wali Murid</strong></div>
-            <div style="font-weight: bold; text-decoration: underline;" id="kuitansiWali2">(...........................)</div>
-          </td>
-          <td style="width: 50%; position: relative;">
-            <div style="margin-bottom: 50px;">
-              <div style="font-size: 8.5pt;" id="kuitansiTanggal2">Bandar Lampung, -</div>
-              <strong>Bendahara Keuangan</strong>
-            </div>
-            <div class="stamp-placeholder">CAP SEKOLAH</div>
-            <div style="font-weight: bold; text-decoration: underline;" id="kuitansiPetugas2">Ahmad Surdiyanto, S.E.</div>
-          </td>
-        </tr>
-      </table>
-
-      <div class="receipt-footer">
-        <span>* Lembar 2: Arsip Keuangan / Tata Usaha</span>
-        <span>Dicetak secara resmi oleh Sistem Keuangan SD IT</span>
-      </div>
-    </div>
   </div>
 
   <!-- ================= JAVASCRIPT APP LOGIC ================= -->
@@ -1007,7 +798,7 @@
       switchTab('spp');
     }
 
-    /* TRANSAKSI & KONVERSI TERBILANG */
+    /* KONVERSI TERBILANG BANYAK DIGUNAKAN KUITANSI */
     function terbilang(angka) {
       const bil = ["", "Satu", "Dua", "Tiga", "Empat", "Lima", "Enam", "Tujuh", "Delapan", "Sembilan", "Sepuluh", "Sebelas"];
       if (angka < 12) return bil[angka];
@@ -1049,13 +840,13 @@
       if (trx) printReceipt(trx);
     }
 
+    /* ENGINE PRINT KUITANSI RESMI MODERN DENGAN IFRAME (MENCEGAH RESIZE STRUK THERMAL) */
     function printReceipt(trx) {
-      document.querySelectorAll('.print-school-name').forEach(el => el.innerText = state.school.name);
-      document.querySelectorAll('.print-school-addr').forEach(el => el.innerText = state.school.address);
-
+      const schoolName = state.school.name;
+      const schoolAddr = state.school.address;
       const noTrx = "KW-SDIT/" + new Date(trx.date).getFullYear() + "/" + trx.id;
-      document.getElementById('kuitansiNo1').innerText = noTrx;
-      document.getElementById('kuitansiNo2').innerText = noTrx;
+      const dateStr = "Bandar Lampung, " + new Date(trx.date).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' });
+      const petugas = state.currentUser ? state.currentUser.user : "Ahmad Surdiyanto, S.E.";
 
       let penerimaText = "-";
       let waliText = "(...........................)";
@@ -1067,36 +858,223 @@
         penerimaText = trx.ket || "Umum / Mitra Sekolah";
       }
 
-      document.getElementById('kuitansiPenerima1').innerText = penerimaText;
-      document.getElementById('kuitansiPenerima2').innerText = penerimaText;
-
       const terbilangText = "# " + terbilang(trx.nominal) + " Rupiah #";
-      document.getElementById('kuitansiTerbilang1').innerText = terbilangText;
-      document.getElementById('kuitansiTerbilang2').innerText = terbilangText;
-
       const detailText = `${trx.kategori} - ${trx.ket}`;
-      document.getElementById('kuitansiKet1').innerText = detailText;
-      document.getElementById('kuitansiKet2').innerText = detailText;
-
       const totalText = "TERABAYAR: Rp " + trx.nominal.toLocaleString('id-ID') + ",-";
-      document.getElementById('kuitansiTotal1').innerText = totalText;
-      document.getElementById('kuitansiTotal2').innerText = totalText;
 
-      const dateStr = "Bandar Lampung, " + new Date(trx.date).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' });
-      document.getElementById('kuitansiTanggal1').innerText = dateStr;
-      document.getElementById('kuitansiTanggal2').innerText = dateStr;
+      const receiptHTML = `
+        <!DOCTYPE html>
+        <html lang="id">
+        <head>
+          <meta charset="UTF-8">
+          <title>Kuitansi Resmi Pembayaran</title>
+          <style>
+            @page { size: A4 portrait; margin: 10mm; }
+            body { font-family: 'Times New Roman', Times, serif; color: #0f172a; margin: 0; padding: 0; background: #fff; }
+            .kuitansi-card {
+              border: 2px solid #065f46; border-radius: 8px; padding: 20px 24px; margin-bottom: 20px; position: relative;
+            }
+            .kuitansi-card::before {
+              content: ""; position: absolute; top: 4px; left: 4px; right: 4px; bottom: 4px;
+              border: 1px dashed #059669; border-radius: 6px; pointer-events: none;
+            }
+            .header-table { width: 100%; border-collapse: collapse; margin-bottom: 10px; border-bottom: 3px double #065f46; padding-bottom: 8px; }
+            .logo-icon {
+              width: 50px; height: 50px; background-color: #065f46; border-radius: 50%; color: #fff;
+              font-family: sans-serif; font-weight: bold; font-size: 18pt; line-height: 50px; text-align: center; margin: 0 auto;
+            }
+            .school-title { font-family: sans-serif; font-size: 14pt; font-weight: bold; color: #065f46; margin: 0; }
+            .school-sub { font-family: sans-serif; font-size: 8.5pt; font-weight: 600; color: #047857; margin: 2px 0; }
+            .school-addr { font-size: 8pt; color: #475569; margin: 0; line-height: 1.2; }
+            
+            .title-bar { width: 100%; text-align: center; margin: 10px 0; }
+            .receipt-heading { font-family: sans-serif; font-size: 13pt; font-weight: bold; text-decoration: underline; text-transform: uppercase; color: #065f46; margin: 0; }
+            .receipt-no { font-family: monospace; font-size: 9pt; color: #334155; margin-top: 3px; }
 
-      document.getElementById('kuitansiWali1').innerText = waliText;
-      document.getElementById('kuitansiWali2').innerText = waliText;
+            .details-table { width: 100%; border-collapse: collapse; margin-bottom: 10px; font-size: 9.5pt; }
+            .details-table td { padding: 4px 3px; vertical-align: top; }
+            .terbilang-box { background-color: #f0fdf4; border: 1px italic #bbf7d0; padding: 5px 8px; font-style: italic; font-weight: bold; color: #166534; border-radius: 4px; }
 
-      const petugasName = state.currentUser ? state.currentUser.user : "Ahmad Surdiyanto, S.E.";
-      document.getElementById('kuitansiPetugas1').innerText = petugasName;
-      document.getElementById('kuitansiPetugas2').innerText = petugasName;
+            .amount-badge { display: inline-block; background-color: #065f46; color: #fff; font-family: sans-serif; font-size: 12pt; font-weight: bold; padding: 6px 16px; border-radius: 6px; margin-bottom: 10px; }
 
-      const printArea = document.getElementById('printArea');
-      printArea.classList.remove('hidden');
-      window.print();
-      printArea.classList.add('hidden');
+            .signature-table { width: 100%; border-collapse: collapse; font-size: 9pt; text-align: center; }
+            .signature-table td { vertical-align: top; }
+            .stamp-placeholder {
+              position: absolute; top: -35px; left: 50%; transform: translateX(-50%);
+              width: 75px; height: 75px; border: 2px dashed #94a3b8; border-radius: 50%;
+              opacity: 0.35; line-height: 75px; font-size: 6.5pt; color: #64748b; font-family: sans-serif; pointer-events: none;
+            }
+            .receipt-footer { margin-top: 10px; border-top: 1px solid #e2e8f0; padding-top: 5px; font-size: 7.5pt; color: #64748b; font-style: italic; display: flex; justify-content: space-between; }
+            .page-break-line { border-bottom: 2px dashed #cbd5e1; margin: 20px 0; position: relative; }
+            .page-break-label { position: absolute; top: -9px; right: 20px; background: #fff; padding: 0 8px; font-size: 7pt; color: #94a3b8; font-family: sans-serif; }
+          </style>
+        </head>
+        <body>
+
+          <!-- LEMBAR 1: UNTUK SISWA / WALI -->
+          <div class="kuitansi-card">
+            <table class="header-table">
+              <tr>
+                <td style="width: 55px;"><div class="logo-icon">SD</div></td>
+                <td style="padding-left: 12px;">
+                  <h1 class="school-title">${schoolName}</h1>
+                  <p class="school-sub">YAYASAN PENDIDIKAN ISLAM AL-FATH LAMPUNG</p>
+                  <p class="school-addr">${schoolAddr}</p>
+                </td>
+              </tr>
+            </table>
+
+            <div class="title-bar">
+              <h2 class="receipt-heading">KUITANSI PEMBAYARAN RESMI</h2>
+              <div class="receipt-no">Nomor Transaksi: <strong>${noTrx}</strong></div>
+            </div>
+
+            <table class="details-table">
+              <tr>
+                <td style="width: 23%; font-weight: bold;">Telah Diterima Dari</td>
+                <td style="width: 2%; font-weight: bold;">:</td>
+                <td style="width: 75%;">${penerimaText}</td>
+              </tr>
+              <tr>
+                <td style="font-weight: bold;">Uang Sejumlah</td>
+                <td>:</td>
+                <td><div class="terbilang-box">${terbilangText}</div></td>
+              </tr>
+              <tr>
+                <td style="font-weight: bold;">Untuk Pembayaran</td>
+                <td>:</td>
+                <td>${detailText}</td>
+              </tr>
+              <tr>
+                <td style="font-weight: bold;">Metode Pembayaran</td>
+                <td>:</td>
+                <td>Tunai / Kasir Keuangan Sekolah</td>
+              </tr>
+            </table>
+
+            <div class="amount-badge">${totalText}</div>
+
+            <table class="signature-table">
+              <tr>
+                <td style="width: 33%;">
+                  <div style="margin-bottom: 45px;"><strong>Pembayar / Wali Murid</strong></div>
+                  <div style="font-weight: bold; text-decoration: underline;">${waliText}</div>
+                  <div style="font-size: 8pt; color: #64748b;">Tanda Tangan</div>
+                </td>
+                <td style="width: 33%;">
+                  <div style="margin-bottom: 45px;"><strong>Mengetahui,<br>Kepala Sekolah</strong></div>
+                  <div style="font-weight: bold; text-decoration: underline;">Siti Rahmawati, S.Pd.I.</div>
+                  <div style="font-size: 8pt; color: #64748b;">NIP. 19850412 201001 2 003</div>
+                </td>
+                <td style="width: 34%; position: relative;">
+                  <div style="margin-bottom: 45px;">
+                    <div style="font-size: 8.5pt;">${dateStr}</div>
+                    <strong>Bendahara Keuangan</strong>
+                  </div>
+                  <div class="stamp-placeholder">CAP SEKOLAH</div>
+                  <div style="font-weight: bold; text-decoration: underline;">${petugas}</div>
+                  <div style="font-size: 8pt; color: #64748b;">NPY. 201801 042</div>
+                </td>
+              </tr>
+            </table>
+
+            <div class="receipt-footer">
+              <span>* Lembar 1: Untuk Siswa / Wali Murid</span>
+              <span>Dicetak secara resmi oleh Sistem Keuangan SD IT</span>
+            </div>
+          </div>
+
+          <div class="page-break-line">
+            <span class="page-break-label">POTONG DI SINI (ARSIP BENDAHARA SEKOLAH)</span>
+          </div>
+
+          <!-- LEMBAR 2: UNTUK ARSIP BENDAHARA -->
+          <div class="kuitansi-card" style="border-color: #475569;">
+            <table class="header-table" style="border-bottom-color: #475569;">
+              <tr>
+                <td style="width: 55px;"><div class="logo-icon" style="background-color: #334155;">SD</div></td>
+                <td style="padding-left: 12px;">
+                  <h1 class="school-title" style="color: #334155;">${schoolName}</h1>
+                  <p class="school-sub" style="color: #475569;">YAYASAN PENDIDIKAN ISLAM AL-FATH LAMPUNG</p>
+                  <p class="school-addr">${schoolAddr}</p>
+                </td>
+              </tr>
+            </table>
+
+            <div class="title-bar">
+              <h2 class="receipt-heading" style="color: #334155;">KUITANSI PEMBAYARAN RESMI (ARSIP BENDAHARA)</h2>
+              <div class="receipt-no">Nomor Transaksi: <strong>${noTrx}</strong></div>
+            </div>
+
+            <table class="details-table">
+              <tr>
+                <td style="width: 23%; font-weight: bold;">Telah Diterima Dari</td>
+                <td style="width: 2%; font-weight: bold;">:</td>
+                <td style="width: 75%;">${penerimaText}</td>
+              </tr>
+              <tr>
+                <td style="font-weight: bold;">Uang Sejumlah</td>
+                <td>:</td>
+                <td><div class="terbilang-box" style="background-color: #f1f5f9; border-color: #cbd5e1; color: #334155;">${terbilangText}</div></td>
+              </tr>
+              <tr>
+                <td style="font-weight: bold;">Untuk Pembayaran</td>
+                <td>:</td>
+                <td>${detailText}</td>
+              </tr>
+            </table>
+
+            <div class="amount-badge" style="background-color: #334155;">${totalText}</div>
+
+            <table class="signature-table">
+              <tr>
+                <td style="width: 50%;">
+                  <div style="margin-bottom: 45px;"><strong>Pembayar / Wali Murid</strong></div>
+                  <div style="font-weight: bold; text-decoration: underline;">${waliText}</div>
+                </td>
+                <td style="width: 50%; position: relative;">
+                  <div style="margin-bottom: 45px;">
+                    <div style="font-size: 8.5pt;">${dateStr}</div>
+                    <strong>Bendahara Keuangan</strong>
+                  </div>
+                  <div class="stamp-placeholder">CAP SEKOLAH</div>
+                  <div style="font-weight: bold; text-decoration: underline;">${petugas}</div>
+                </td>
+              </tr>
+            </table>
+
+            <div class="receipt-footer">
+              <span>* Lembar 2: Arsip Keuangan / Tata Usaha</span>
+              <span>Dicetak secara resmi oleh Sistem Keuangan SD IT</span>
+            </div>
+          </div>
+
+        </body>
+        </html>
+      `;
+
+      let iframe = document.getElementById('printFrame');
+      if (!iframe) {
+        iframe = document.createElement('iframe');
+        iframe.id = 'printFrame';
+        iframe.style.position = 'fixed';
+        iframe.style.right = '0';
+        iframe.style.bottom = '0';
+        iframe.style.width = '0';
+        iframe.style.height = '0';
+        iframe.style.border = '0';
+        document.body.appendChild(iframe);
+      }
+
+      const frameDoc = iframe.contentWindow || iframe.contentDocument.document || iframe.contentDocument;
+      frameDoc.document.open();
+      frameDoc.document.write(receiptHTML);
+      frameDoc.document.close();
+
+      setTimeout(() => {
+        iframe.contentWindow.focus();
+        iframe.contentWindow.print();
+      }, 300);
     }
 
     function deleteTrx(id, type) {
