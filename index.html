@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistem Keuangan SD IT</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- SheetJS (Export Excel) -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    
+    /* Animasi Pop-Up Content */
+    .animate-popup {
+      animation: popUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    @keyframes popUp {
+      0% { opacity: 0; transform: scale(0.96) translateY(10px); }
+      100% { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    /* Animasi Floating Hover Menu */
+    .menu-item {
+      transition: all 0.25s ease;
+    }
+    .menu-item:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px -5px rgba(16, 185, 129, 0.3);
+    }
+    .glass-card {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(12px);
+    }
+  </style>
+</head>
+<body class="bg-slate-900 text-slate-800 antialiased min-h-screen">
+
+  <!-- ================= LISENSI PAGE ================= -->
+  <div id="licensePage" class="hidden min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-slate-900 via-emerald-950 to-slate-900 text-white">
+    <div class="max-w-4xl w-full bg-slate-800/80 backdrop-blur-xl p-8 rounded-3xl border border-emerald-500/30 shadow-2xl animate-popup">
+      <div class="text-center mb-8">
+        <div class="inline-flex p-4 rounded-2xl bg-emerald-500/10 text-emerald-400 mb-4 border border-emerald-500/20">
+          <i class="fa-solid fa-key text-4xl"></i>
+        </div>
+        <h1 class="text-3xl font-bold bg-gradient-to-r from-emerald-400 to-teal-200 bg-clip-text text-transparent">Aktivasi Lisensi Aplikasi Keuangan SD IT</h1>
+        <p class="text-slate-400 mt-2">Masa aktif lisensi Anda telah habis atau belum terdaftar. Silakan pilih paket lisensi berikut:</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <!-- Bulanan -->
+        <div class="bg-slate-700/50 border border-slate-600 rounded-2xl p-6 flex flex-col justify-between hover:border-emerald-500 transition shadow-lg hover:shadow-emerald-500/10">
+          <div>
+            <span class="text-xs font-semibold px-3 py-1 bg-slate-600 text-slate-300 rounded-full">Paket Bulanan</span>
+            <h3 class="text-2xl font-bold mt-4 text-white">Rp 500.000</h3>
+            <p class="text-xs text-slate-400 mb-4">/ bulan</p>
+            <ul class="text-sm text-slate-300 space-y-2 mb-6">
+              <li><i class="fa-solid fa-check text-emerald-400 mr-2"></i>Akses Penuh Fitur</li>
+              <li><i class="fa-solid fa-check text-emerald-400 mr-2"></i>Support Teknis</li>
+            </ul>
+          </div>
+          <button onclick="buyLicense('Paket Bulanan - Rp 500.000/Bulan')" class="w-full py-3 rounded-xl bg-slate-600 hover:bg-emerald-600 font-semibold text-white transition">Beli via WA</button>
+        </div>
+
+        <!-- Tahunan -->
+        <div class="bg-gradient-to-b from-emerald-900/40 to-slate-800 border-2 border-emerald-500 rounded-2xl p-6 flex flex-col justify-between relative shadow-xl shadow-emerald-950/50">
+          <span class="absolute -top-3 left-1/2 -translate-x-1/2 text-xs font-bold px-3 py-1 bg-emerald-500 text-slate-950 rounded-full uppercase tracking-wider">Hemat</span>
+          <div>
+            <span class="text-xs font-semibold px-3 py-1 bg-emerald-500/20 text-emerald-300 rounded-full">Paket Tahunan</span>
+            <h3 class="text-2xl font-bold mt-4 text-white">Rp 3.500.000</h3>
+            <p class="text-xs text-emerald-400/80 mb-4">/ tahun</p>
+            <ul class="text-sm text-slate-300 space-y-2 mb-6">
+              <li><i class="fa-solid fa-check text-emerald-400 mr-2"></i>Akses Penuh Fitur</li>
+              <li><i class="fa-solid fa-check text-emerald-400 mr-2"></i>Prioritas Support</li>
+              <li><i class="fa-solid fa-check text-emerald-400 mr-2"></i>Gratis Update</li>
+            </ul>
+          </div>
+          <button onclick="buyLicense('Paket Tahunan - Rp 3.500.000/Tahun')" class="w-full py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 font-bold text-slate-950 transition">Beli via WA</button>
+        </div>
+
+        <!-- Selamanya -->
+        <div class="bg-slate-700/50 border border-slate-600 rounded-2xl p-6 flex flex-col justify-between hover:border-emerald-500 transition shadow-lg hover:shadow-emerald-500/10">
+          <div>
+            <span class="text-xs font-semibold px-3 py-1 bg-amber-500/20 text-amber-300 rounded-full">Lifetime</span>
+            <h3 class="text-2xl font-bold mt-4 text-white">Rp 5.500.000</h3>
+            <p class="text-xs text-slate-400 mb-4">Sekali bayar selamanya</p>
+            <ul class="text-sm text-slate-300 space-y-2 mb-6">
+              <li><i class="fa-solid fa-check text-emerald-400 mr-2"></i>Akses Selamanya</li>
+              <li><i class="fa-solid fa-check text-emerald-400 mr-2"></i>VIP Support</li>
+            </ul>
+          </div>
+          <button onclick="buyLicense('Paket Lifetime - Rp 5.500.000')" class="w-full py-3 rounded-xl bg-slate-600 hover:bg-emerald-600 font-semibold text-white transition">Beli via WA</button>
+        </div>
+      </div>
+
+      <!-- Input Kunci Lisensi Aktivasi -->
+      <div class="bg-slate-900/60 p-4 rounded-2xl border border-slate-700 flex flex-col sm:flex-row gap-3">
+        <input type="text" id="inputLicenseKey" placeholder="Masukkan Kode Lisensi..." class="flex-1 bg-slate-800 border border-slate-600 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-emerald-500">
+        <button onclick="activateLicense()" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-6 py-3 rounded-xl transition">Aktivasi Aplikasi</button>
+      </div>
+      <p class="text-xs text-slate-500 mt-2 text-center">Petunjuk: Gunakan kode lisensi <code class="text-emerald-400">SDIT-PRO-2026</code> untuk mencoba demo langsung.</p>
+    </div>
+  </div>
+
+  <!-- ================= LOGIN PAGE ================= -->
+  <div id="loginPage" class="hidden min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-slate-900 via-emerald-950 to-slate-900 text-white">
+    <div class="max-w-md w-full bg-slate-800/80 backdrop-blur-xl p-8 rounded-3xl border border-emerald-500/20 shadow-2xl animate-popup">
+      <div class="text-center mb-6">
+        <div class="w-20 h-20 bg-emerald-500/10 rounded-full flex items-center justify-center mx-auto mb-3 border border-emerald-500/30">
+          <i class="fa-solid fa-school text-3xl text-emerald-400"></i>
+        </div>
+        <h2 class="text-2xl font-bold text-white school-name-display">SD IT AL-FATH</h2>
+        <p class="text-slate-400 text-sm">Sistem Informasi Keuangan Sekolah</p>
+      </div>
+
+      <form onsubmit="handleLogin(event)" class="space-y-4">
+        <div>
+          <label class="text-xs text-slate-300 font-semibold uppercase">Username</label>
+          <input type="text" id="loginUser" required value="admin" class="w-full mt-1 bg-slate-700/50 border border-slate-600 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-emerald-500">
+        </div>
+        <div>
+          <label class="text-xs text-slate-300 font-semibold uppercase">Password</label>
+          <input type="password" id="loginPass" required value="admin123" class="w-full mt-1 bg-slate-700/50 border border-slate-600 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-emerald-500">
+        </div>
+        <button type="submit" class="w-full py-3 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-bold rounded-xl shadow-lg transition">Masuk ke Sistem</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= MAIN APP DASHBOARD ================= -->
+  <div id="mainApp" class="hidden min-h-screen flex flex-col md:flex-row bg-slate-100">
+    
+    <!-- Sidebar Navigasi -->
+    <aside class="w-full md:w-64 bg-slate-900 text-white flex-shrink-0 border-r border-slate-800">
+      <div class="p-5 flex items-center space-x-3 border-b border-slate-800">
+        <img id="appLogo" src="https://via.placeholder.com/40" class="w-10 h-10 rounded-lg object-cover bg-emerald-500/20 border border-emerald-500/40">
+        <div>
+          <h1 class="font-bold text-sm leading-tight text-emerald-400 school-name-display">SD IT AL-FATH</h1>
+          <p class="text-[10px] text-slate-400">Keuangan Versi 1.0</p>
+        </div>
+      </div>
+
+      <nav class="p-4 space-y-2">
+        <button onclick="switchTab('dashboard')" class="menu-item w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-slate-300 hover:bg-emerald-600 hover:text-white transition font-medium text-sm">
+          <i class="fa-solid fa-chart-pie w-5"></i><span>Dashboard</span>
+        </button>
+        <button onclick="switchTab('pemasukan')" class="menu-item w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-slate-300 hover:bg-emerald-600 hover:text-white transition font-medium text-sm">
+          <i class="fa-solid fa-wallet w-5"></i><span>Pemasukan</span>
+        </button>
+        <button onclick="switchTab('pengeluaran')" class="menu-item w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-slate-300 hover:bg-emerald-600 hover:text-white transition font-medium text-sm">
+          <i class="fa-solid fa-arrow-right-from-bracket w-5"></i><span>Pengeluaran</span>
+        </button>
+        <button onclick="switchTab('spp')" class="menu-item w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-slate-300 hover:bg-emerald-600 hover:text-white transition font-medium text-sm">
+          <i class="fa-solid fa-graduation-cap w-5"></i><span>Pembayaran SPP</span>
+        </button>
+        <button onclick="switchTab('laporan')" class="menu-item w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-slate-300 hover:bg-emerald-600 hover:text-white transition font-medium text-sm">
+          <i class="fa-solid fa-file-invoice-dollar w-5"></i><span>Laporan Rekap</span>
+        </button>
+        <button onclick="switchTab('pengaturan')" class="menu-item w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-slate-300 hover:bg-emerald-600 hover:text-white transition font-medium text-sm">
+          <i class="fa-solid fa-gear w-5"></i><span>Pengaturan</span>
+        </button>
+        <button onclick="logout()" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-rose-400 hover:bg-rose-500/20 transition font-medium text-sm mt-8">
+          <i class="fa-solid fa-power-off w-5"></i><span>Keluar</span>
+        </button>
+      </nav>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 flex flex-col min-w-0 h-screen overflow-y-auto">
+      
+      <!-- Top Header -->
+      <header class="bg-white border-b border-slate-200 px-6 py-4 flex flex-col sm:flex-row justify-between items-center gap-4 sticky top-0 z-10">
+        <div>
+          <h2 id="pageTitle" class="text-xl font-bold text-slate-800">Dashboard Utama</h2>
+          <p class="text-xs text-slate-500 school-address-display">Jl. Pendidikan No. 1, SD IT Smart</p>
+        </div>
+        <!-- Realtime Clock -->
+        <div class="bg-emerald-50 text-emerald-800 border border-emerald-200 px-4 py-2 rounded-xl text-right flex items-center gap-3">
+          <i class="fa-regular fa-clock text-emerald-600 text-lg"></i>
+          <div>
+            <div id="realtimeClock" class="font-bold text-sm tracking-wide">00:00:00 WIB</div>
+            <div id="realtimeDate" class="text-[10px] text-emerald-600">Senin, 1 Jan 2026</div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Dynamic Views Container -->
+      <div class="p-6">
+        
+        <!-- === VIEW: DASHBOARD === -->
+        <section id="viewDashboard" class="animate-popup space-y-6">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+              <div>
+                <p class="text-xs text-slate-500 font-semibold uppercase">Total Pemasukan</p>
+                <h3 id="dashPemasukan" class="text-2xl font-bold text-emerald-600 mt-1">Rp 0</h3>
+              </div>
+              <div class="p-3 bg-emerald-100 rounded-xl text-emerald-600"><i class="fa-solid fa-arrow-down text-xl"></i></div>
+            </div>
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+              <div>
+                <p class="text-xs text-slate-500 font-semibold uppercase">Total Pengeluaran</p>
+                <h3 id="dashPengeluaran" class="text-2xl font-bold text-rose-600 mt-1">Rp 0</h3>
+              </div>
+              <div class="p-3 bg-rose-100 rounded-xl text-rose-600"><i class="fa-solid fa-arrow-up text-xl"></i></div>
+            </div>
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+              <div>
+                <p class="text-xs text-slate-500 font-semibold uppercase">Saldo Kas Sekolah</p>
+                <h3 id="dashSaldo" class="text-2xl font-bold text-blue-600 mt-1">Rp 0</h3>
+              </div>
+              <div class="p-3 bg-blue-100 rounded-xl text-blue-600"><i class="fa-solid fa-scale-balanced text-xl"></i></div>
+            </div>
+          </div>
+
+          <!-- Charts -->
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+              <h4 class="font-bold text-slate-800 mb-4">Grafik Keuangan Bulanan</h4>
+              <canvas id="chartKeuangan" class="max-h-64"></canvas>
+            </div>
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+              <h4 class="font-bold text-slate-800 mb-4">Proporsi Sumber Pemasukan</h4>
+              <canvas id="chartPie" class="max-h-64"></canvas>
+            </div>
+          </div>
+        </section>
+
+        <!-- === VIEW: PEMASUKAN === -->
+        <section id="viewPemasukan" class="hidden animate-popup space-y-6">
+          <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+            <h3 class="font-bold text-slate-800 mb-4">Tambah Transaksi Pemasukan</h3>
+            <form onsubmit="addTransaction(event, 'pemasukan')" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+              <div>
+                <label class="text-xs font-semibold text-slate-600">Kategori</label>
+                <select id="inKategori" class="w-full mt-1 border border-slate-300 rounded-xl p-2.5 text-sm" required>
+                  <option value="Dana BOS">Dana BOS</option>
+                  <option value="Infaq / Sedekah">Infaq / Sedekah</option>
+                  <option value="Uang Gedung / Pendaftaran">Uang Gedung / Pendaftaran</option>
+                  <option value="Penjualan Seragam & Buku">Penjualan Seragam & Buku</option>
+                  <option value="Sewa Fasilitas">Sewa Fasilitas</option>
+                  <option value="Lain-lain">Lain-lain</option>
+                </select>
+              </div>
+              <div>
+                <label class="text-xs font-semibold text-slate-600">Jumlah (Rp)</label>
+                <input type="number" id="inNominal" class="w-full mt-1 border border-slate-300 rounded-xl p-2.5 text-sm" placeholder="0" required>
+              </div>
+              <div>
+                <label class="text-xs font-semibold text-slate-600">Keterangan</label>
+                <input type="text" id="inKet" class="w-full mt-1 border border-slate-300 rounded-xl p-2.5 text-sm" placeholder="Catatan transaksi..." required>
+              </div>
+              <div class="flex items-end">
+                <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 rounded-xl transition">Simpan & Cetak</button>
+              </div>
+            </form>
+          </div>
+
+          <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+            <div class="p-4 bg-slate-50 border-b border-slate-200 font-bold text-slate-700">Riwayat Pemasukan</div>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left border-collapse text-sm">
+                <thead>
+                  <tr class="bg-slate-100 border-b border-slate-200 text-slate-600">
+                    <th class="p-3">Tanggal</th>
+                    <th class="p-3">Kategori</th>
+                    <th class="p-3">Keterangan</th>
+                    <th class="p-3">Nominal</th>
+                    <th class="p-3">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody id="tablePemasukan"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- === VIEW: PENGELUARAN === -->
+        <section id="viewPengeluaran" class="hidden animate-popup space-y-6">
+          <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+            <h3 class="font-bold text-slate-800 mb-4">Tambah Transaksi Pengeluaran</h3>
+            <form onsubmit="addTransaction(event, 'pengeluaran')" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+              <div>
+                <label class="text-xs font-semibold text-slate-600">Kategori</label>
+                <select id="outKategori" class="w-full mt-1 border border-slate-300 rounded-xl p-2.5 text-sm" required>
+                  <option value="Gaji Guru & Staf">Gaji Guru & Staf</option>
+                  <option value="Operational & Listrik/Air">Operational & Listrik/Air</option>
+                  <option value="Pembelian ATK & Alat">Pembelian ATK & Alat</option>
+                  <option value="Perbaikan & Pemeliharaan">Perbaikan & Pemeliharaan</option>
+                  <option value="Kegiatan & Acara Siswa">Kegiatan & Acara Siswa</option>
+                  <option value="Lain-lain">Lain-lain</option>
+                </select>
+              </div>
+              <div>
+                <label class="text-xs font-semibold text-slate-600">Jumlah (Rp)</label>
+                <input type="number" id="outNominal" class="w-full mt-1 border border-slate-300 rounded-xl p-2.5 text-sm" placeholder="0" required>
+              </div>
+              <div>
+                <label class="text-xs font-semibold text-slate-600">Keterangan</label>
+                <input type="text" id="outKet" class="w-full mt-1 border border-slate-300 rounded-xl p-2.5 text-sm" placeholder="Catatan transaksi..." required>
+              </div>
+              <div class="flex items-end">
+                <button type="submit" class="w-full bg-rose-600 hover:bg-rose-500 text-white font-bold py-2.5 rounded-xl transition">Simpan & Cetak</button>
+              </div>
+            </form>
+          </div>
+
+          <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+            <div class="p-4 bg-slate-50 border-b border-slate-200 font-bold text-slate-700">Riwayat Pengeluaran</div>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left border-collapse text-sm">
+                <thead>
+                  <tr class="bg-slate-100 border-b border-slate-200 text-slate-600">
+                    <th class="p-3">Tanggal</th>
+                    <th class="p-3">Kategori</th>
+                    <th class="p-3">Keterangan</th>
+                    <th class="p-3">Nominal</th>
+                    <th class="p-3">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody id="tablePengeluaran"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- === VIEW: SPP === -->
+        <section id="viewSpp" class="hidden animate-popup space-y-6">
+          <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+            <h3 class="font-bold text-slate-800 mb-4">Pembayaran SPP Bulanan Siswa</h3>
+            <form onsubmit="paySPP(event)" class="grid grid-cols-1 md:grid-cols-5 gap-4">
+              <div>
+                <label class="text-xs font-semibold text-slate-600">Nama Siswa</label>
+                <input type="text" id="sppNama" class="w-full mt-1 border border-slate-300 rounded-xl p-2.5 text-sm" placeholder="Ahmad..." required>
+              </div>
+              <div>
+                <label class="text-xs font-semibold text-slate-600">Kelas</label>
+                <select id="sppKelas" class="w-full mt-1 border border-slate-300 rounded-xl p-2.5 text-sm" required>
+                  <option value="1 SD IT">1 SD IT</option>
+                  <option value="2 SD IT">2 SD IT</option>
+                  <option value="3 SD IT">3 SD IT</option>
+                  <option value="4 SD IT">4 SD IT</option>
+                  <option value="5 SD IT">5 SD IT</option>
+                  <option value="6 SD IT">6 SD IT</option>
+                </select>
+              </div>
+              <div>
+                <label class="text-xs font-semibold text-slate-600">Jumlah Bulan</label>
+                <input type="number" id="sppBulanCount" min="1" max="12" value="1" onchange="calcSPP()" onkeyup="calcSPP()" class="w-full mt-1 border border-slate-300 rounded-xl p-2.5 text-sm" required>
+              </div>
+              <div>
+                <label class="text-xs font-semibold text-slate-600">Tarif / Bulan (Rp)</label>
+                <input type="number" id="sppTarif" value="350000" onchange="calcSPP()" onkeyup="calcSPP()" class="w-full mt-1 border border-slate-300 rounded-xl p-2.5 text-sm" required>
+              </div>
+              <div>
+                <label class="text-xs font-semibold text-slate-600">Total Otomatis</label>
+                <input type="text" id="sppTotalDisplay" value="Rp 350.000" class="w-full mt-1 border border-slate-300 rounded-xl p-2.5 text-sm bg-slate-100 font-bold text-emerald-600" readonly>
+              </div>
+              <div class="md:col-span-5 flex justify-end">
+                <button type="submit" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-6 py-2.5 rounded-xl transition">Bayar & Cetak Kuitansi</button>
+              </div>
+            </form>
+          </div>
+
+          <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+            <div class="p-4 bg-slate-50 border-b border-slate-200 font-bold text-slate-700">Riwayat Pembayaran SPP</div>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left border-collapse text-sm">
+                <thead>
+                  <tr class="bg-slate-100 border-b border-slate-200 text-slate-600">
+                    <th class="p-3">Tanggal</th>
+                    <th class="p-3">Nama Siswa</th>
+                    <th class="p-3">Kelas</th>
+                    <th class="p-3">Jumlah Bulan</th>
+                    <th class="p-3">Total Bayar</th>
+                    <th class="p-3">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody id="tableSpp"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- === VIEW: LAPORAN === -->
+        <section id="viewLaporan" class="hidden animate-popup space-y-6">
+          <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div>
+              <h3 class="font-bold text-slate-800">Rekap Laporan Keuangan</h3>
+              <p class="text-xs text-slate-500">Unduh data laporan lengkap dalam format Excel</p>
+            </div>
+            <button onclick="exportToExcel()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-5 py-2.5 rounded-xl shadow transition flex items-center gap-2">
+              <i class="fa-solid fa-file-excel"></i> Ekspor Laporan Excel
+            </button>
+          </div>
+
+          <!-- Summary Multi Periode -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="bg-white p-5 rounded-2xl border border-slate-200">
+              <span class="text-xs text-slate-400 font-bold uppercase">Rekap Harian</span>
+              <h4 id="reportHari" class="text-xl font-bold text-slate-800 mt-2">Rp 0</h4>
+            </div>
+            <div class="bg-white p-5 rounded-2xl border border-slate-200">
+              <span class="text-xs text-slate-400 font-bold uppercase">Rekap Bulanan</span>
+              <h4 id="reportBulan" class="text-xl font-bold text-slate-800 mt-2">Rp 0</h4>
+            </div>
+            <div class="bg-white p-5 rounded-2xl border border-slate-200">
+              <span class="text-xs text-slate-400 font-bold uppercase">Rekap Tahunan</span>
+              <h4 id="reportTahun" class="text-xl font-bold text-slate-800 mt-2">Rp 0</h4>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+            <div class="p-4 bg-slate-50 border-b border-slate-200 font-bold text-slate-700">Semua Jurnal Transaksi</div>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left border-collapse text-sm">
+                <thead>
+                  <tr class="bg-slate-100 border-b border-slate-200 text-slate-600">
+                    <th class="p-3">Tanggal</th>
+                    <th class="p-3">Tipe</th>
+                    <th class="p-3">Kategori</th>
+                    <th class="p-3">Keterangan</th>
+                    <th class="p-3">Jumlah</th>
+                  </tr>
+                </thead>
+                <tbody id="tableLaporan"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- === VIEW: PENGATURAN === -->
+        <section id="viewPengaturan" class="hidden animate-popup space-y-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Pengaturan Identitas Sekolah -->
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+              <h3 class="font-bold text-slate-800 mb-4">Profil Sekolah</h3>
+              <form onsubmit="saveProfile(event)" class="space-y-4">
+                <div>
+                  <label class="text-xs font-semibold text-slate-600">Nama Sekolah</label>
+                  <input type="text" id="setSchoolName" class="w-full mt-1 border border-slate-300 rounded-xl p-2.5 text-sm" required>
+                </div>
+                <div>
+                  <label class="text-xs font-semibold text-slate-600">Alamat Sekolah</label>
+                  <textarea id="setSchoolAddress" class="w-full mt-1 border border-slate-300 rounded-xl p-2.5 text-sm" rows="3" required></textarea>
+                </div>
+                <div>
+                  <label class="text-xs font-semibold text-slate-600">Logo Sekolah</label>
+                  <input type="file" id="setSchoolLogo" accept="image/*" class="w-full mt-1 text-sm border border-slate-300 rounded-xl p-2">
+                </div>
+                <button type="submit" class="bg-emerald-600 text-white font-bold px-5 py-2.5 rounded-xl hover:bg-emerald-500 transition">Simpan Profil</button>
+              </form>
+            </div>
+
+            <!-- Managemen Pengguna -->
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+              <h3 class="font-bold text-slate-800 mb-4">Pengaturan Akun Akses</h3>
+              <form onsubmit="addUser(event)" class="space-y-3 mb-6">
+                <input type="text" id="accUser" placeholder="Username Baru" class="w-full border border-slate-300 rounded-xl p-2.5 text-sm" required>
+                <input type="password" id="accPass" placeholder="Password Baru" class="w-full border border-slate-300 rounded-xl p-2.5 text-sm" required>
+                <button type="submit" class="w-full bg-slate-800 text-white font-bold py-2.5 rounded-xl hover:bg-slate-700 transition">Tambah Akun</button>
+              </form>
+
+              <h4 class="font-semibold text-xs text-slate-500 uppercase mb-2">Daftar Akun Pengguna</h4>
+              <ul id="userList" class="space-y-2 text-sm"></ul>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- ================= PRINT RECEIPT TEMPLATE (HIDDEN) ================= -->
+  <div id="printArea" class="hidden">
+    <div style="width: 300px; font-family: monospace; padding: 15px; border: 1px solid #ccc;">
+      <div style="text-align: center; margin-bottom: 10px;">
+        <h3 id="receiptSchool" style="margin: 0; font-size: 16px;">SD IT</h3>
+        <p id="receiptAddr" style="margin: 0; font-size: 10px;"></p>
+        <p>--------------------------------</p>
+      </div>
+      <p style="font-size: 11px;" id="receiptDate"></p>
+      <p style="font-size: 11px;" id="receiptType"></p>
+      <p>--------------------------------</p>
+      <p style="font-size: 11px;" id="receiptDetail"></p>
+      <p style="font-size: 14px; font-weight: bold; margin-top: 10px;" id="receiptTotal"></p>
+      <p>--------------------------------</p>
+      <p style="text-align: center; font-size: 10px;">Terima Kasih Atas Pembayarannya</p>
+    </div>
+  </div>
+
+  <!-- ================= JAVASCRIPT APP LOGIC ================= -->
+  <script>
+    // State System Data Local Storage Key Defaults
+    const DEMO_LICENSE = "SDIT-PRO-2026";
+    let state = {
+      licenseActive: localStorage.getItem('sdit_license') === 'true',
+      isLoggedIn: sessionStorage.getItem('sdit_login') === 'true',
+      transactions: JSON.parse(localStorage.getItem('sdit_trx')) || [],
+      school: JSON.parse(localStorage.getItem('sdit_school')) || {
+        name: "SD IT AL-FATH",
+        address: "Jl. Pendidikan No. 12, Kota Bandar Lampung",
+        logo: "https://cdn-icons-png.flaticon.com/512/2997/2997295.png"
+      },
+      users: JSON.parse(localStorage.getItem('sdit_users')) || [
+        { user: "admin", pass: "admin123" }
+      ]
+    };
+
+    let chartInstance = null;
+    let pieInstance = null;
+
+    // Initialization
+    window.onload = function() {
+      startRealtimeClock();
+      checkStateNavigation();
+      updateSchoolDisplay();
+    };
+
+    // Navigation & State Handler
+    function checkStateNavigation() {
+      document.getElementById('licensePage').classList.add('hidden');
+      document.getElementById('loginPage').classList.add('hidden');
+      document.getElementById('mainApp').classList.add('hidden');
+
+      if (!state.licenseActive) {
+        document.getElementById('licensePage').classList.remove('hidden');
+      } else if (!state.isLoggedIn) {
+        document.getElementById('loginPage').classList.remove('hidden');
+      } else {
+        document.getElementById('mainApp').classList.remove('hidden');
+        renderDashboard();
+      }
+    }
+
+    // WA Buying Redirect
+    function buyLicense(paket) {
+      const waNum = "6282186087066";
+      const text = encodeURIComponent(`Halo, Saya ingin membeli Kode Lisensi Aplikasi Keuangan SD IT:\n*${paket}*\n\nMohon info prosedur selanjutnya.`);
+      window.open(`https://wa.me/${waNum}?text=${text}`, '_blank');
+    }
+
+    // License Key Activation
+    function activateLicense() {
+      const input = document.getElementById('inputLicenseKey').value.trim();
+      if (input === DEMO_LICENSE || input.length >= 8) {
+        state.licenseActive = true;
+        localStorage.setItem('sdit_license', 'true');
+        alert('Lisensi Berhasil Diaktifkan!');
+        checkStateNavigation();
+      } else {
+        alert('Kode Lisensi tidak valid. Hubungi WA 082186087066');
+      }
+    }
+
+    // Login System
+    function handleLogin(e) {
+      e.preventDefault();
+      const u = document.getElementById('loginUser').value;
+      const p = document.getElementById('loginPass').value;
+
+      const valid = state.users.find(x => x.user === u && x.pass === p);
+      if (valid) {
+        state.isLoggedIn = true;
+        sessionStorage.setItem('sdit_login', 'true');
+        checkStateNavigation();
+      } else {
+        alert('Username atau Password Salah!');
+      }
+    }
+
+    function logout() {
+      state.isLoggedIn = false;
+      sessionStorage.removeItem('sdit_login');
+      checkStateNavigation();
+    }
+
+    // Realtime Clock
+    function startRealtimeClock() {
+      setInterval(() => {
+        const now = new Date();
+        document.getElementById('realtimeClock').innerText = now.toLocaleTimeString('id-ID') + ' WIB';
+        const options = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' };
+        document.getElementById('realtimeDate').innerText = now.toLocaleDateString('id-ID', options);
+      }, 1000);
+    }
+
+    // Tab Switcher with Pop-Up Animation
+    function switchTab(tab) {
+      const tabs = ['dashboard', 'pemasukan', 'pengeluaran', 'spp', 'laporan', 'pengaturan'];
+      tabs.forEach(t => {
+        const target = document.getElementById(`view${t.charAt(0).toUpperCase() + t.slice(1)}`);
+        if (target) target.classList.add('hidden');
+      });
+
+      const activeView = document.getElementById(`view${tab.charAt(0).toUpperCase() + tab.slice(1)}`);
+      if (activeView) {
+        activeView.classList.remove('hidden');
+        document.getElementById('pageTitle').innerText = tab.toUpperCase();
+      }
+
+      if (tab === 'dashboard') renderDashboard();
+      if (tab === 'pemasukan') renderTables('pemasukan');
+      if (tab === 'pengeluaran') renderTables('pengeluaran');
+      if (tab === 'spp') renderTables('spp');
+      if (tab === 'laporan') renderLaporan();
+      if (tab === 'pengaturan') renderUsers();
+    }
+
+    // Transactions Engine
+    function addTransaction(e, type) {
+      e.preventDefault();
+      const isIn = type === 'pemasukan';
+      const kategori = document.getElementById(isIn ? 'inKategori' : 'outKategori').value;
+      const nominal = parseFloat(document.getElementById(isIn ? 'inNominal' : 'outNominal').value);
+      const ket = document.getElementById(isIn ? 'inKet' : 'outKet').value;
+
+      const trx = {
+        id: Date.now(),
+        type: type,
+        kategori: kategori,
+        nominal: nominal,
+        ket: ket,
+        date: new Date().toISOString()
+      };
+
+      state.transactions.push(trx);
+      saveTrx();
+      printReceipt(trx);
+      switchTab(type);
+    }
+
+    function calcSPP() {
+      const cnt = parseInt(document.getElementById('sppBulanCount').value) || 0;
+      const trf = parseFloat(document.getElementById('sppTarif').value) || 0;
+      const tot = cnt * trf;
+      document.getElementById('sppTotalDisplay').value = 'Rp ' + tot.toLocaleString('id-ID');
+    }
+
+    function paySPP(e) {
+      e.preventDefault();
+      const nama = document.getElementById('sppNama').value;
+      const kelas = document.getElementById('sppKelas').value;
+      const cnt = parseInt(document.getElementById('sppBulanCount').value);
+      const trf = parseFloat(document.getElementById('sppTarif').value);
+      const total = cnt * trf;
+
+      const trx = {
+        id: Date.now(),
+        type: 'spp',
+        kategori: 'SPP Siswa',
+        nominal: total,
+        ket: `SPP ${nama} (${kelas}) - ${cnt} Bulan`,
+        nama: nama,
+        kelas: kelas,
+        date: new Date().toISOString()
+      };
+
+      state.transactions.push(trx);
+      saveTrx();
+      printReceipt(trx);
+      switchTab('spp');
+    }
+
+    function deleteTrx(id, type) {
+      if(confirm('Hapus Transaksi ini?')) {
+        state.transactions = state.transactions.filter(t => t.id !== id);
+        saveTrx();
+        renderTables(type);
+      }
+    }
+
+    function saveTrx() {
+      localStorage.setItem('sdit_trx', JSON.stringify(state.transactions));
+    }
+
+    // Render Tables
+    function renderTables(type) {
+      const filtered = state.transactions.filter(t => t.type === type);
+      const tbody = document.getElementById(`table${type.charAt(0).toUpperCase() + type.slice(1)}`);
+      tbody.innerHTML = '';
+
+      filtered.reverse().forEach(t => {
+        const d = new Date(t.date).toLocaleDateString('id-ID');
+        if (type === 'spp') {
+          tbody.innerHTML += `
+            <tr class="border-b border-slate-100 hover:bg-slate-50">
+              <td class="p-3">${d}</td>
+              <td class="p-3 font-semibold">${t.nama}</td>
+              <td class="p-3">${t.kelas}</td>
+              <td class="p-3">${t.ket}</td>
+              <td class="p-3 font-bold text-emerald-600">Rp ${t.nominal.toLocaleString('id-ID')}</td>
+              <td class="p-3">
+                <button onclick="printReceiptById(${t.id})" class="text-blue-600 hover:text-blue-800 mr-2"><i class="fa-solid fa-print"></i></button>
+                <button onclick="deleteTrx(${t.id}, 'spp')" class="text-rose-600 hover:text-rose-800"><i class="fa-solid fa-trash"></i></button>
+              </td>
+            </tr>
+          `;
+        } else {
+          tbody.innerHTML += `
+            <tr class="border-b border-slate-100 hover:bg-slate-50">
+              <td class="p-3">${d}</td>
+              <td class="p-3">${t.kategori}</td>
+              <td class="p-3">${t.ket}</td>
+              <td class="p-3 font-bold ${type==='pemasukan'?'text-emerald-600':'text-rose-600'}">Rp ${t.nominal.toLocaleString('id-ID')}</td>
+              <td class="p-3">
+                <button onclick="printReceiptById(${t.id})" class="text-blue-600 hover:text-blue-800 mr-2"><i class="fa-solid fa-print"></i></button>
+                <button onclick="deleteTrx(${t.id}, '${type}')" class="text-rose-600 hover:text-rose-800"><i class="fa-solid fa-trash"></i></button>
+              </td>
+            </tr>
+          `;
+        }
+      });
+    }
+
+    // Render Dashboard Charts & Cards
+    function renderDashboard() {
+      let totalIn = 0, totalOut = 0;
+      state.transactions.forEach(t => {
+        if(t.type === 'pemasukan' || t.type === 'spp') totalIn += t.nominal;
+        if(t.type === 'pengeluaran') totalOut += t.nominal;
+      });
+
+      document.getElementById('dashPemasukan').innerText = 'Rp ' + totalIn.toLocaleString('id-ID');
+      document.getElementById('dashPengeluaran').innerText = 'Rp ' + totalOut.toLocaleString('id-ID');
+      document.getElementById('dashSaldo').innerText = 'Rp ' + (totalIn - totalOut).toLocaleString('id-ID');
+
+      // Chart.js - Bar
+      const ctxBar = document.getElementById('chartKeuangan').getContext('2d');
+      if (chartInstance) chartInstance.destroy();
+      chartInstance = new Chart(ctxBar, {
+        type: 'bar',
+        data: {
+          labels: ['Total Pemasukan', 'Total Pengeluaran', 'Saldo Kas'],
+          datasets: [{
+            data: [totalIn, totalOut, totalIn - totalOut],
+            backgroundColor: ['#10b981', '#f43f5e', '#3b82f6'],
+            borderRadius: 8
+          }]
+        },
+        options: { plugins: { legend: { display: false } } }
+      });
+
+      // Chart.js - Pie
+      const ctxPie = document.getElementById('chartPie').getContext('2d');
+      if (pieInstance) pieInstance.destroy();
+      pieInstance = new Chart(ctxPie, {
+        type: 'doughnut',
+        data: {
+          labels: ['SPP Siswa', 'Pemasukan Lain', 'Pengeluaran'],
+          datasets: [{
+            data: [
+              state.transactions.filter(t=>t.type==='spp').reduce((a,b)=>a+b.nominal,0),
+              state.transactions.filter(t=>t.type==='pemasukan').reduce((a,b)=>a+b.nominal,0),
+              totalOut
+            ],
+            backgroundColor: ['#0d9488', '#10b981', '#f43f5e']
+          }]
+        }
+      });
+    }
+
+    // Render Laporan & Filter Multi Periode
+    function renderLaporan() {
+      const tbody = document.getElementById('tableLaporan');
+      tbody.innerHTML = '';
+
+      let dayTotal = 0, monthTotal = 0, yearTotal = 0;
+      const today = new Date().toDateString();
+      const thisMonth = new Date().getMonth();
+      const thisYear = new Date().getFullYear();
+
+      state.transactions.forEach(t => {
+        const d = new Date(t.date);
+        const isIncome = t.type === 'pemasukan' || t.type === 'spp';
+        const net = isIncome ? t.nominal : -t.nominal;
+
+        if (d.toDateString() === today) dayTotal += net;
+        if (d.getMonth() === thisMonth && d.getFullYear() === thisYear) monthTotal += net;
+        if (d.getFullYear() === thisYear) yearTotal += net;
+
+        tbody.innerHTML += `
+          <tr class="border-b border-slate-100 hover:bg-slate-50">
+            <td class="p-3">${d.toLocaleDateString('id-ID')}</td>
+            <td class="p-3"><span class="px-2 py-1 text-xs font-bold rounded-md ${isIncome?'bg-emerald-100 text-emerald-700':'bg-rose-100 text-rose-700'}">${t.type.toUpperCase()}</span></td>
+            <td class="p-3">${t.kategori}</td>
+            <td class="p-3">${t.ket}</td>
+            <td class="p-3 font-bold ${isIncome?'text-emerald-600':'text-rose-600'}">Rp ${t.nominal.toLocaleString('id-ID')}</td>
+          </tr>
+        `;
+      });
+
+      document.getElementById('reportHari').innerText = 'Rp ' + dayTotal.toLocaleString('id-ID');
+      document.getElementById('reportBulan').innerText = 'Rp ' + monthTotal.toLocaleString('id-ID');
+      document.getElementById('reportTahun').innerText = 'Rp ' + yearTotal.toLocaleString('id-ID');
+    }
+
+    // Export Excel Feature
+    function exportToExcel() {
+      const data = state.transactions.map(t => ({
+        Tanggal: new Date(t.date).toLocaleDateString('id-ID'),
+        Tipe: t.type.toUpperCase(),
+        Kategori: t.kategori,
+        Keterangan: t.ket,
+        Nominal: t.nominal
+      }));
+
+      const ws = XLSX.utils.json_to_sheet(data);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Laporan Keuangan");
+      XLSX.writeFile(wb, `Laporan_Keuangan_SDIT_${Date.now()}.xlsx`);
+    }
+
+    // Print Receipt System
+    function printReceiptById(id) {
+      const trx = state.transactions.find(t => t.id === id);
+      if (trx) printReceipt(trx);
+    }
+
+    function printReceipt(trx) {
+      document.getElementById('receiptSchool').innerText = state.school.name;
+      document.getElementById('receiptAddr').innerText = state.school.address;
+      document.getElementById('receiptDate').innerText = "Tgl: " + new Date(trx.date).toLocaleString('id-ID');
+      document.getElementById('receiptType').innerText = "Jenis: " + trx.type.toUpperCase();
+      document.getElementById('receiptDetail').innerText = "Ket: " + trx.ket;
+      document.getElementById('receiptTotal').innerText = "TOTAL: Rp " + trx.nominal.toLocaleString('id-ID');
+
+      const printContents = document.getElementById('printArea').innerHTML;
+      const originalContents = document.body.innerHTML;
+
+      document.body.innerHTML = printContents;
+      window.print();
+      document.body.innerHTML = originalContents;
+      window.location.reload();
+    }
+
+    // Pengaturan System
+    function saveProfile(e) {
+      e.preventDefault();
+      state.school.name = document.getElementById('setSchoolName').value;
+      state.school.address = document.getElementById('setSchoolAddress').value;
+
+      const fileInput = document.getElementById('setSchoolLogo');
+      if (fileInput.files && fileInput.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          state.school.logo = e.target.result;
+          localStorage.setItem('sdit_school', JSON.stringify(state.school));
+          updateSchoolDisplay();
+          alert('Profil Sekolah Diperbarui!');
+        };
+        reader.readAsDataURL(fileInput.files[0]);
+      } else {
+        localStorage.setItem('sdit_school', JSON.stringify(state.school));
+        updateSchoolDisplay();
+        alert('Profil Sekolah Diperbarui!');
+      }
+    }
+
+    function updateSchoolDisplay() {
+      document.querySelectorAll('.school-name-display').forEach(el => el.innerText = state.school.name);
+      document.querySelectorAll('.school-address-display').forEach(el => el.innerText = state.school.address);
+      if(state.school.logo) document.getElementById('appLogo').src = state.school.logo;
+
+      document.getElementById('setSchoolName').value = state.school.name;
+      document.getElementById('setSchoolAddress').value = state.school.address;
+    }
+
+    function addUser(e) {
+      e.preventDefault();
+      const u = document.getElementById('accUser').value;
+      const p = document.getElementById('accPass').value;
+
+      state.users.push({ user: u, pass: p });
+      localStorage.setItem('sdit_users', JSON.stringify(state.users));
+      renderUsers();
+      document.getElementById('accUser').value = '';
+      document.getElementById('accPass').value = '';
+    }
+
+    function deleteUser(idx) {
+      if(state.users.length <= 1) return alert('Tidak bisa menghapus semua akun!');
+      state.users.splice(idx, 1);
+      localStorage.setItem('sdit_users', JSON.stringify(state.users));
+      renderUsers();
+    }
+
+    function renderUsers() {
+      const ul = document.getElementById('userList');
+      ul.innerHTML = '';
+      state.users.forEach((u, i) => {
+        ul.innerHTML += `
+          <li class="flex justify-between items-center p-2 bg-slate-100 rounded-lg">
+            <span><i class="fa-solid fa-user mr-2 text-slate-500"></i>${u.user}</span>
+            <button onclick="deleteUser(${i})" class="text-rose-600 hover:text-rose-800"><i class="fa-solid fa-trash"></i></button>
+          </li>
+        `;
+      });
+    }
+  </script>
+</body>
+</html>
