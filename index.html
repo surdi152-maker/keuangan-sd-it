@@ -167,11 +167,17 @@
           <h2 id="pageTitle" class="text-xl font-bold text-slate-800">Dashboard Utama</h2>
           <p class="text-xs text-slate-500 school-address-display">Jl. Pendidikan No. 12, Kota Bandar Lampung</p>
         </div>
-        <div class="bg-emerald-50 text-emerald-800 border border-emerald-200 px-4 py-2 rounded-xl text-right flex items-center gap-3">
-          <i class="fa-regular fa-clock text-emerald-600 text-lg"></i>
-          <div>
-            <div id="realtimeClock" class="font-bold text-sm tracking-wide">00:00:00 WIB</div>
-            <div id="realtimeDate" class="text-[10px] text-emerald-600">Senin, 1 Jan 2026</div>
+        <div class="flex items-center gap-3">
+          <div id="syncStatusBadge" class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-600 border border-slate-200">
+            <i id="syncIcon" class="fa-solid fa-cloud-arrow-up"></i>
+            <span id="syncText">Tersinkron</span>
+          </div>
+          <div class="bg-emerald-50 text-emerald-800 border border-emerald-200 px-4 py-2 rounded-xl text-right flex items-center gap-3">
+            <i class="fa-regular fa-clock text-emerald-600 text-lg"></i>
+            <div>
+              <div id="realtimeClock" class="font-bold text-sm tracking-wide">00:00:00 WIB</div>
+              <div id="realtimeDate" class="text-[10px] text-emerald-600">Senin, 1 Jan 2026</div>
+            </div>
           </div>
         </div>
       </header>
@@ -560,22 +566,38 @@
               </form>
             </div>
 
-            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-              <h3 class="font-bold text-slate-800 mb-4">Manajemen Hak Akses Akun</h3>
-              <form onsubmit="addUser(event)" class="space-y-3 mb-6">
-                <input type="text" id="accUser" placeholder="Username Baru" class="w-full border border-slate-300 rounded-xl p-2.5 text-sm" required>
-                <input type="password" id="accPass" placeholder="Password Baru" class="w-full border border-slate-300 rounded-xl p-2.5 text-sm" required>
-                <select id="accRole" class="w-full border border-slate-300 rounded-xl p-2.5 text-sm" required>
-                  <option value="bendahara">Bendahara (Akses Penuh Input & Cetak)</option>
-                  <option value="kepsek">Kepala Sekolah (Monitoring & Laporan)</option>
-                  <option value="yayasan">Yayasan (Monitoring & Laporan Audit)</option>
-                  <option value="tu">Tata Usaha (Akses SPP & Data Siswa)</option>
-                </select>
-                <button type="submit" class="w-full bg-slate-800 text-white font-bold py-2.5 rounded-xl hover:bg-slate-700 transition">Tambah Akun Pengguna</button>
-              </form>
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
+              <div>
+                <h3 class="font-bold text-slate-800 mb-2">Integrasi Google Sheets API</h3>
+                <p class="text-xs text-slate-500 mb-3">URL Web App Google Apps Script tersambung secara permanen untuk sinkronisasi otomatis multi-device secara real-time.</p>
+                <div class="space-y-3">
+                  <input type="url" id="setGoogleScriptUrl" placeholder="https://script.google.com/macros/s/.../exec" class="w-full border border-slate-300 rounded-xl p-2.5 text-sm">
+                  <div class="flex gap-2">
+                    <button type="button" onclick="saveGoogleScriptUrl()" class="flex-1 bg-emerald-600 text-white font-bold py-2 rounded-xl text-sm hover:bg-emerald-500 transition">Simpan / Ubah URL API</button>
+                    <button type="button" onclick="loadDataFromGoogleSheets(true)" class="bg-blue-600 text-white font-bold px-4 py-2 rounded-xl text-sm hover:bg-blue-500 transition flex items-center gap-1.5"><i class="fa-solid fa-arrows-rotate"></i> Sync Sekarang</button>
+                  </div>
+                </div>
+              </div>
 
-              <h4 class="font-semibold text-xs text-slate-500 uppercase mb-2">Daftar Pengguna Aktif</h4>
-              <ul id="userList" class="space-y-2 text-sm"></ul>
+              <hr class="border-slate-200">
+
+              <div>
+                <h3 class="font-bold text-slate-800 mb-4">Manajemen Hak Akses Akun</h3>
+                <form onsubmit="addUser(event)" class="space-y-3 mb-6">
+                  <input type="text" id="accUser" placeholder="Username Baru" class="w-full border border-slate-300 rounded-xl p-2.5 text-sm" required>
+                  <input type="password" id="accPass" placeholder="Password Baru" class="w-full border border-slate-300 rounded-xl p-2.5 text-sm" required>
+                  <select id="accRole" class="w-full border border-slate-300 rounded-xl p-2.5 text-sm" required>
+                    <option value="bendahara">Bendahara (Akses Penuh Input & Cetak)</option>
+                    <option value="kepsek">Kepala Sekolah (Monitoring & Laporan)</option>
+                    <option value="yayasan">Yayasan (Monitoring & Laporan Audit)</option>
+                    <option value="tu">Tata Usaha (Akses SPP & Data Siswa)</option>
+                  </select>
+                  <button type="submit" class="w-full bg-slate-800 text-white font-bold py-2.5 rounded-xl hover:bg-slate-700 transition">Tambah Akun Pengguna</button>
+                </form>
+
+                <h4 class="font-semibold text-xs text-slate-500 uppercase mb-2">Daftar Pengguna Aktif</h4>
+                <ul id="userList" class="space-y-2 text-sm"></ul>
+              </div>
             </div>
           </div>
         </section>
@@ -587,6 +609,15 @@
   <!-- ================= JAVASCRIPT APP LOGIC ================= -->
   <script>
     const DEMO_LICENSE = "SDIT-PRO-2026";
+    const VALID_LICENSES = [
+      "SDIT-PRO-2026",
+      "SDIT-X7B9-M2K4-P99L"
+    ];
+
+    // URL Google Apps Script yang tersambung langsung
+    const HARDCODED_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwxuwIsmER2CBmXaSHebGB0hCj1nomse3YSeKbgLnCM8VsgJ4mvrw1Gfsc1-bmt5VEK/exec";
+    let GOOGLE_SCRIPT_URL = localStorage.getItem('sdit_script_url') || HARDCODED_SCRIPT_URL;
+
     let state = {
       licenseActive: localStorage.getItem('sdit_license') === 'true',
       isLoggedIn: sessionStorage.getItem('sdit_login') === 'true',
@@ -611,11 +642,99 @@
     let chartInstance = null;
     let pieInstance = null;
 
-    window.onload = function() {
+    window.onload = async function() {
       startRealtimeClock();
-      checkStateNavigation();
       updateSchoolDisplay();
+      document.getElementById('setGoogleScriptUrl').value = GOOGLE_SCRIPT_URL;
+      if (GOOGLE_SCRIPT_URL) {
+        await loadDataFromGoogleSheets();
+      }
+      checkStateNavigation();
     };
+
+    function updateSyncStatus(status, text) {
+      const badge = document.getElementById('syncStatusBadge');
+      const icon = document.getElementById('syncIcon');
+      const txt = document.getElementById('syncText');
+      
+      if (!GOOGLE_SCRIPT_URL) {
+        badge.classList.add('hidden');
+        return;
+      }
+
+      badge.classList.remove('hidden');
+      if (status === 'syncing') {
+        badge.className = "hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200";
+        icon.className = "fa-solid fa-arrows-rotate animate-spin";
+        txt.innerText = text || "Menyingkronkan...";
+      } else if (status === 'success') {
+        badge.className = "hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200";
+        icon.className = "fa-solid fa-cloud-check";
+        txt.innerText = text || "Tersinkron";
+      } else if (status === 'error') {
+        badge.className = "hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-rose-50 text-rose-700 border border-rose-200";
+        icon.className = "fa-solid fa-cloud-xmark";
+        txt.innerText = text || "Gagal Sync";
+      }
+    }
+
+    async function loadDataFromGoogleSheets(manualAlert = false) {
+      if (!GOOGLE_SCRIPT_URL) return;
+      updateSyncStatus('syncing', 'Memuat data...');
+      try {
+        const res = await fetch(`${GOOGLE_SCRIPT_URL}?action=getAllData`);
+        const data = await res.json();
+        if (data.siswa && data.siswa.length > 0) {
+          state.siswa = data.siswa;
+          localStorage.setItem('sdit_siswa', JSON.stringify(state.siswa));
+        }
+        if (data.transactions) {
+          state.transactions = data.transactions;
+          localStorage.setItem('sdit_trx', JSON.stringify(state.transactions));
+        }
+        if (data.users && data.users.length > 0) {
+          state.users = data.users;
+          localStorage.setItem('sdit_users', JSON.stringify(state.users));
+        }
+        updateSyncStatus('success', 'Tersinkron');
+        renderDashboard();
+        if (manualAlert) alert('Data berhasil disinkronkan dari Google Sheets!');
+      } catch (e) {
+        console.error("Gagal sinkronisasi dari Google Sheets:", e);
+        updateSyncStatus('error', 'Gagal Sync');
+        if (manualAlert) alert('Gagal terhubung ke Google Sheets API.');
+      }
+    }
+
+    async function syncToGoogleSheets() {
+      if (!GOOGLE_SCRIPT_URL) return;
+      updateSyncStatus('syncing', 'Menyimpan...');
+      try {
+        await fetch(GOOGLE_SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'syncAll',
+            siswa: state.siswa,
+            transactions: state.transactions,
+            users: state.users
+          })
+        });
+        updateSyncStatus('success', 'Tersinkron');
+      } catch (e) {
+        console.error("Gagal simpan ke Google Sheets:", e);
+        updateSyncStatus('error', 'Gagal Simpan');
+      }
+    }
+
+    function saveGoogleScriptUrl() {
+      const url = document.getElementById('setGoogleScriptUrl').value.trim();
+      GOOGLE_SCRIPT_URL = url || HARDCODED_SCRIPT_URL;
+      localStorage.setItem('sdit_script_url', GOOGLE_SCRIPT_URL);
+      alert('URL Google Sheets API berhasil disimpan!');
+      loadDataFromGoogleSheets(true);
+    }
 
     function checkStateNavigation() {
       document.getElementById('licensePage').classList.add('hidden');
@@ -641,13 +760,14 @@
 
     function activateLicense() {
       const input = document.getElementById('inputLicenseKey').value.trim();
-      if (input === DEMO_LICENSE || input.length >= 8) {
+      
+      if (VALID_LICENSES.includes(input)) {
         state.licenseActive = true;
         localStorage.setItem('sdit_license', 'true');
         alert('Lisensi Berhasil Diaktifkan!');
         checkStateNavigation();
       } else {
-        alert('Kode Lisensi tidak valid.');
+        alert('Kode Lisensi tidak valid atau belum terdaftar.');
       }
     }
 
@@ -744,6 +864,7 @@
       }
 
       localStorage.setItem('sdit_siswa', JSON.stringify(state.siswa));
+      syncToGoogleSheets();
       resetSiswaForm();
       renderSiswaTable();
       alert('Data siswa berhasil disimpan!');
@@ -766,6 +887,7 @@
       if (confirm('Hapus data siswa ini?')) {
         state.siswa = state.siswa.filter(s => s.id !== id);
         localStorage.setItem('sdit_siswa', JSON.stringify(state.siswa));
+        syncToGoogleSheets();
         renderSiswaTable();
       }
     }
@@ -791,7 +913,7 @@
             <td class="p-3">${s.kelas}</td>
             <td class="p-3">${s.wali}</td>
             <td class="p-3">${s.hp || '-'}</td>
-            <td class="p-3 font-bold text-emerald-600">Rp ${s.tarif.toLocaleString('id-ID')}</td>
+            <td class="p-3 font-bold text-emerald-600">Rp ${Number(s.tarif).toLocaleString('id-ID')}</td>
             <td class="p-3">
               <button onclick="editSiswa(${s.id})" class="text-amber-600 hover:text-amber-800 mr-3"><i class="fa-solid fa-pen"></i></button>
               <button onclick="deleteSiswa(${s.id})" class="text-rose-600 hover:text-rose-800"><i class="fa-solid fa-trash"></i></button>
@@ -814,8 +936,8 @@
       const id = document.getElementById('sppSelectSiswa').value;
       const s = state.siswa.find(x => x.id == id);
       if (s) {
-        document.getElementById('sppTagihanDisplay').value = 'Rp ' + (s.tagihan || 0).toLocaleString('id-ID');
-        document.getElementById('sppTarifDisplay').value = 'Rp ' + s.tarif.toLocaleString('id-ID');
+        document.getElementById('sppTagihanDisplay').value = 'Rp ' + Number(s.tagihan || 0).toLocaleString('id-ID');
+        document.getElementById('sppTarifDisplay').value = 'Rp ' + Number(s.tarif).toLocaleString('id-ID');
         calcSPP();
       }
     }
@@ -842,7 +964,7 @@
       const cnt = selectedMonths.length;
       const trf = s ? s.tarif : 0;
       const tot = cnt * trf;
-      document.getElementById('sppTotalDisplay').value = 'Rp ' + tot.toLocaleString('id-ID');
+      document.getElementById('sppTotalDisplay').value = 'Rp ' + Number(tot).toLocaleString('id-ID');
     }
 
     function paySPP(e) {
@@ -926,6 +1048,7 @@
     /* KONVERSI TERBILANG */
     function terbilang(angka) {
       const bil = ["", "Satu", "Dua", "Tiga", "Empat", "Lima", "Enam", "Tujuh", "Delapan", "Sembilan", "Sepuluh", "Sebelas"];
+      angka = Math.floor(angka);
       if (angka < 12) return bil[angka];
       if (angka < 20) return terbilang(angka - 10) + " Belas";
       if (angka < 100) return terbilang(Math.floor(angka / 10)) + " Puluh " + terbilang(angka % 10);
@@ -1054,7 +1177,7 @@
 
       const terbilangText = "# " + terbilang(trx.nominal) + " Rupiah #";
       const detailText = `${trx.kategori} ${trx.type==='spp' ? '- '+trx.ket : ''}`;
-      const totalText = "TERBAYAR: Rp " + trx.nominal.toLocaleString('id-ID') + ",-";
+      const totalText = "TERBAYAR: Rp " + Number(trx.nominal).toLocaleString('id-ID') + ",-";
 
       const receiptHTML = `
         <!DOCTYPE html>
@@ -1268,6 +1391,7 @@
 
     function saveTrx() {
       localStorage.setItem('sdit_trx', JSON.stringify(state.transactions));
+      syncToGoogleSheets();
     }
 
     function renderTables(type) {
@@ -1275,7 +1399,7 @@
       const tbody = document.getElementById(`table${type.charAt(0).toUpperCase() + type.slice(1)}`);
       tbody.innerHTML = '';
 
-      filtered.reverse().forEach(t => {
+      filtered.slice().reverse().forEach(t => {
         const d = new Date(t.date).toLocaleDateString('id-ID');
         if (type === 'spp') {
           tbody.innerHTML += `
@@ -1284,7 +1408,7 @@
               <td class="p-3 font-semibold">${t.nama}</td>
               <td class="p-3">${t.kelas}</td>
               <td class="p-3">${t.bulanList || t.ket}</td>
-              <td class="p-3 font-bold text-emerald-600">Rp ${t.nominal.toLocaleString('id-ID')}</td>
+              <td class="p-3 font-bold text-emerald-600">Rp ${Number(t.nominal).toLocaleString('id-ID')}</td>
               <td class="p-3">
                 <button onclick="editTrxSpp(${t.id})" class="text-amber-600 hover:text-amber-800 mr-2"><i class="fa-solid fa-pen"></i></button>
                 <button onclick="printReceiptById(${t.id})" class="text-blue-600 hover:text-blue-800 mr-2"><i class="fa-solid fa-print"></i></button>
@@ -1298,7 +1422,7 @@
               <td class="p-3">${d}</td>
               <td class="p-3">${t.kategori}</td>
               <td class="p-3">${t.ket}</td>
-              <td class="p-3 font-bold text-emerald-600">Rp ${t.nominal.toLocaleString('id-ID')}</td>
+              <td class="p-3 font-bold text-emerald-600">Rp ${Number(t.nominal).toLocaleString('id-ID')}</td>
               <td class="p-3">
                 <button onclick="editTrxIn(${t.id})" class="text-amber-600 hover:text-amber-800 mr-2"><i class="fa-solid fa-pen"></i></button>
                 <button onclick="printReceiptById(${t.id})" class="text-blue-600 hover:text-blue-800 mr-2"><i class="fa-solid fa-print"></i></button>
@@ -1312,7 +1436,7 @@
               <td class="p-3">${d}</td>
               <td class="p-3">${t.kategori}</td>
               <td class="p-3">${t.ket}</td>
-              <td class="p-3 font-bold text-rose-600">Rp ${t.nominal.toLocaleString('id-ID')}</td>
+              <td class="p-3 font-bold text-rose-600">Rp ${Number(t.nominal).toLocaleString('id-ID')}</td>
               <td class="p-3">
                 <button onclick="editTrxOut(${t.id})" class="text-amber-600 hover:text-amber-800 mr-2"><i class="fa-solid fa-pen"></i></button>
                 <button onclick="printReceiptById(${t.id})" class="text-blue-600 hover:text-blue-800 mr-2"><i class="fa-solid fa-print"></i></button>
@@ -1327,8 +1451,9 @@
     function renderDashboard() {
       let totalIn = 0, totalOut = 0;
       state.transactions.forEach(t => {
-        if(t.type === 'pemasukan' || t.type === 'spp') totalIn += t.nominal;
-        if(t.type === 'pengeluaran') totalOut += t.nominal;
+        const nom = Number(t.nominal) || 0;
+        if(t.type === 'pemasukan' || t.type === 'spp') totalIn += nom;
+        if(t.type === 'pengeluaran') totalOut += nom;
       });
 
       document.getElementById('dashPemasukan').innerText = 'Rp ' + totalIn.toLocaleString('id-ID');
@@ -1358,8 +1483,8 @@
           labels: ['SPP Siswa', 'Pemasukan Lain', 'Pengeluaran'],
           datasets: [{
             data: [
-              state.transactions.filter(t=>t.type==='spp').reduce((a,b)=>a+b.nominal,0),
-              state.transactions.filter(t=>t.type==='pemasukan').reduce((a,b)=>a+b.nominal,0),
+              state.transactions.filter(t=>t.type==='spp').reduce((a,b)=>a+(Number(b.nominal)||0),0),
+              state.transactions.filter(t=>t.type==='pemasukan').reduce((a,b)=>a+(Number(b.nominal)||0),0),
               totalOut
             ],
             backgroundColor: ['#0d9488', '#10b981', '#f43f5e']
@@ -1380,7 +1505,8 @@
       state.transactions.forEach(t => {
         const d = new Date(t.date);
         const isIncome = t.type === 'pemasukan' || t.type === 'spp';
-        const net = isIncome ? t.nominal : -t.nominal;
+        const nom = Number(t.nominal) || 0;
+        const net = isIncome ? nom : -nom;
 
         if (d.toDateString() === today) dayTotal += net;
         if (d.getMonth() === thisMonth && d.getFullYear() === thisYear) monthTotal += net;
@@ -1392,7 +1518,7 @@
             <td class="p-3"><span class="px-2 py-1 text-xs font-bold rounded-md ${isIncome?'bg-emerald-100 text-emerald-700':'bg-rose-100 text-rose-700'}">${t.type.toUpperCase()}</span></td>
             <td class="p-3">${t.kategori}</td>
             <td class="p-3">${t.ket}</td>
-            <td class="p-3 font-bold ${isIncome?'text-emerald-600':'text-rose-600'}">Rp ${t.nominal.toLocaleString('id-ID')}</td>
+            <td class="p-3 font-bold ${isIncome?'text-emerald-600':'text-rose-600'}">Rp ${nom.toLocaleString('id-ID')}</td>
           </tr>
         `;
       });
@@ -1408,7 +1534,7 @@
         Tipe: t.type.toUpperCase(),
         Kategori: t.kategori,
         Keterangan: t.ket,
-        Nominal: t.nominal
+        Nominal: Number(t.nominal) || 0
       }));
 
       const ws = XLSX.utils.json_to_sheet(data);
@@ -1456,6 +1582,7 @@
 
       state.users.push({ user: u, pass: p, role: r });
       localStorage.setItem('sdit_users', JSON.stringify(state.users));
+      syncToGoogleSheets();
       renderUsers();
       document.getElementById('accUser').value = '';
       document.getElementById('accPass').value = '';
@@ -1465,6 +1592,7 @@
       if(state.users.length <= 1) return alert('Tidak bisa menghapus semua akun!');
       state.users.splice(idx, 1);
       localStorage.setItem('sdit_users', JSON.stringify(state.users));
+      syncToGoogleSheets();
       renderUsers();
     }
 
